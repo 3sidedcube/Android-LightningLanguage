@@ -1,7 +1,10 @@
 package com.cube.storm;
 
 import android.content.Context;
+import android.net.Uri;
 
+import com.cube.storm.language.data.Language;
+import com.cube.storm.language.lib.manager.LanguageManager;
 import com.cube.storm.util.lib.resolver.AssetsResolver;
 import com.cube.storm.util.lib.resolver.FileResolver;
 import com.cube.storm.util.lib.resolver.Resolver;
@@ -54,6 +57,17 @@ public class LanguageSettings
 	@Getter private Map<String, Resolver> uriResolvers = new LinkedHashMap<String, Resolver>(2);
 
 	/**
+	 * Default loaded language. This will default to what ever the device's locale currently is
+	 */
+	@Getter private Language defaultLanguage;
+
+	/**
+	 * The fallback language to use if a key wasn't found in the default language, or if the default
+	 * language was not loaded
+	 */
+	@Getter private Language fallbackLanguage;
+
+	/**
 	 * The builder class for {@link com.cube.storm.LanguageSettings}. Use this to create a new {@link com.cube.storm.LanguageSettings} instance
 	 * with the customised properties specific for your project.
 	 *
@@ -66,7 +80,15 @@ public class LanguageSettings
 		 */
 		private LanguageSettings construct;
 
+		/**
+		 * The context of the builder
+		 */
 		private Context context;
+
+		/**
+		 * Temporary language Uris. Gets loaded when {@link #build()} is called
+		 */
+		private Uri defaultLanguage, fallbackLanguage;
 
 		/**
 		 * Default constructor
@@ -78,6 +100,34 @@ public class LanguageSettings
 
 			registerUriResolver("file", new FileResolver());
 			registerUriResolver("assets", new AssetsResolver(context));
+
+			defaultLanguage(Uri.parse("assets://languages/" + LanguageManager.getInstance().getLocale(context) + ".json"));
+		}
+
+		/**
+		 * Sets the default language uri to load
+		 *
+		 * @param languageUri The language Uri
+		 *
+		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
+		 */
+		public Builder defaultLanguage(Uri languageUri)
+		{
+			this.defaultLanguage = languageUri;
+			return this;
+		}
+
+		/**
+		 * Sets the fallback language uri to load
+		 *
+		 * @param languageUri The language Uri
+		 *
+		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
+		 */
+		public Builder fallbackLanguage(Uri languageUri)
+		{
+			this.fallbackLanguage = languageUri;
+			return this;
 		}
 
 		/**
@@ -98,11 +148,22 @@ public class LanguageSettings
 		 * Builds the final settings object and sets its instance. Use {@link #getInstance()} to retrieve the settings
 		 * instance.
 		 *
+		 * The languages set by {@link #defaultLanguage(android.net.Uri)} and {@link #fallbackLanguage(android.net.Uri)} are
+		 * loaded at this point.
+		 *
 		 * @return The newly set {@link com.cube.storm.LanguageSettings} instance
 		 */
 		public LanguageSettings build()
 		{
-			return (LanguageSettings.instance = construct);
+			LanguageSettings.instance = construct;
+			construct.defaultLanguage = LanguageManager.getInstance().loadLanguage(context, defaultLanguage);
+
+			if (construct.fallbackLanguage != null)
+			{
+				construct.fallbackLanguage = LanguageManager.getInstance().loadLanguage(context, fallbackLanguage);
+			}
+
+			return LanguageSettings.instance;
 		}
 	}
 }
