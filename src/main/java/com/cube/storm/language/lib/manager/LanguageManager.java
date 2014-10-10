@@ -58,7 +58,8 @@ public class LanguageManager
 	@NonNull
 	public String getValue(Context context, @NonNull String key)
 	{
-		if (LanguageSettings.getInstance().getDefaultLanguage().hasValue(key))
+		if (LanguageSettings.getInstance().getDefaultLanguage().hasValue(key)
+		|| (LanguageSettings.getInstance().getFallbackLanguage() != null && LanguageSettings.getInstance().getFallbackLanguage().hasValue(key)))
 		{
 			return getValue(key);
 		}
@@ -85,7 +86,14 @@ public class LanguageManager
 	@NonNull
 	public String getValue(@NonNull String key)
 	{
-		return LanguageSettings.getInstance().getDefaultLanguage().getValue(key);
+		String value = LanguageSettings.getInstance().getDefaultLanguage().getValue(key);
+
+		if (TextUtils.isEmpty(value) && LanguageSettings.getInstance().getFallbackLanguage() != null)
+		{
+			value = LanguageSettings.getInstance().getFallbackLanguage().getValue(key);
+		}
+
+		return value;
 	}
 
 	/**
@@ -146,11 +154,15 @@ public class LanguageManager
 					if (resolver != null)
 					{
 						byte[] languageData = resolver.resolveFile(languageUri);
-						Language language = gson.fromJson(new String(languageData, "UTF-8"), Language.class);
 
-						if (language != null)
+						if (languageData != null)
 						{
-							return language;
+							Language language = gson.fromJson(new String(languageData, "UTF-8"), Language.class);
+
+							if (language != null)
+							{
+								return language;
+							}
 						}
 					}
 				}
