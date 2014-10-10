@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.cube.storm.LanguageSettings;
 import com.cube.storm.language.data.Language;
 import com.cube.storm.language.lib.processor.LanguageProcessor;
+import com.cube.storm.util.lib.resolver.Resolver;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -140,12 +141,17 @@ public class LanguageManager
 			{
 				try
 				{
-					byte[] languageData = LanguageSettings.getInstance().getUriResolvers().get(protocol).resolveFile(languageUri);
-					Language language = gson.fromJson(new String(languageData, "UTF-8"), Language.class);
+					Resolver resolver = LanguageSettings.getInstance().getUriResolvers().get(protocol);
 
-					if (language != null)
+					if (resolver != null)
 					{
-						return language;
+						byte[] languageData = resolver.resolveFile(languageUri);
+						Language language = gson.fromJson(new String(languageData, "UTF-8"), Language.class);
+
+						if (language != null)
+						{
+							return language;
+						}
 					}
 				}
 				catch (UnsupportedEncodingException e)

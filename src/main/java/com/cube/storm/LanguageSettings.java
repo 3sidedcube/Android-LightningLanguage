@@ -99,7 +99,7 @@ public class LanguageSettings
 			this.context = context.getApplicationContext();
 
 			registerUriResolver("file", new FileResolver());
-			registerUriResolver("assets", new AssetsResolver(context));
+			registerUriResolver("assets", new AssetsResolver(this.context));
 
 			defaultLanguage(Uri.parse("assets://languages/" + LanguageManager.getInstance().getLocale(context) + ".json"));
 		}
