@@ -52,6 +52,11 @@ public class LanguageSettings
 	private LanguageSettings(){}
 
 	/**
+	 * Language manager used to resolve
+	 */
+	@Getter private LanguageManager languageManager;
+
+	/**
 	 * Uri resolver used to load a file based on it's protocol.
 	 */
 	@Getter private Map<String, Resolver> uriResolvers = new LinkedHashMap<String, Resolver>(2);
@@ -98,10 +103,25 @@ public class LanguageSettings
 			this.construct = new LanguageSettings();
 			this.context = context.getApplicationContext();
 
+			languageManager(LanguageManager.getInstance());
+
 			registerUriResolver("file", new FileResolver());
 			registerUriResolver("assets", new AssetsResolver(this.context));
 
 			defaultLanguage(Uri.parse("assets://languages/" + LanguageManager.getInstance().getLocale(context) + ".json"));
+		}
+
+		/**
+		 * Sets the default language manager
+		 *
+		 * @param manager The language manager
+		 *
+		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
+		 */
+		public Builder languageManager(LanguageManager manager)
+		{
+			construct.languageManager = manager;
+			return this;
 		}
 
 		/**
