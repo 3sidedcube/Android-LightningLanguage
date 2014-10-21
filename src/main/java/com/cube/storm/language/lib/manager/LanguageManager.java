@@ -56,7 +56,7 @@ public class LanguageManager
 	 * @return The string, or an empty string
 	 */
 	@NonNull
-	public String getValue(Context context, @NonNull String key)
+	public String getValue(@NonNull Context context, @NonNull String key)
 	{
 		if (LanguageSettings.getInstance().getDefaultLanguage().hasValue(key)
 		|| (LanguageSettings.getInstance().getFallbackLanguage() != null && LanguageSettings.getInstance().getFallbackLanguage().hasValue(key)))
@@ -101,16 +101,17 @@ public class LanguageManager
 	 *
 	 * The following codes are converted:
 	 * <ul>
-	 * <li>iw -> he</li>
-	 * <li>in -> id</li>
-	 * <li>ji -> yi</li>
+	 * <li>iw -&gt; he</li>
+	 * <li>in -&gt; id</li>
+	 * <li>ji -&gt; yi</li>
 	 * </ul>
 	 *
 	 * @param context The context to use to find the locale.
 	 *
 	 * @return The locale in the format `xxx_xx` (3 letter CC, 2 letter language)
 	 */
-	public String getLocale(Context context)
+	@NonNull
+	public String getLocale(@NonNull Context context)
 	{
 		String region = context.getResources().getConfiguration().locale.getISO3Country().toLowerCase();
 		String locale = context.getResources().getConfiguration().locale.getLanguage();
@@ -139,7 +140,7 @@ public class LanguageManager
 	 * @param languageUri The uri of the language to load
 	 */
 	@NonNull
-	public Language loadLanguage(Context context, Uri languageUri)
+	public Language loadLanguage(@NonNull Context context, @NonNull Uri languageUri)
 	{
 		Gson gson = new GsonBuilder().registerTypeAdapter(Language.class, new LanguageProcessor()).create();
 
