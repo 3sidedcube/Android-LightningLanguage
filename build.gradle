@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+
+android {
+	compileSdkVersion 19
+	buildToolsVersion "19.1.0"
+
+	defaultConfig {
+		applicationId "com.cube.storm.language"
+		minSdkVersion 15
+		targetSdkVersion 19
+		versionCode 1
+		versionName "0.1"
+	}
+
+	packagingOptions {
+		exclude 'META-INF/DEPENDENCIES.txt'
+		exclude 'META-INF/LICENSE.txt'
+		exclude 'META-INF/NOTICE.txt'
+		exclude 'META-INF/NOTICE'
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/DEPENDENCIES'
+		exclude 'META-INF/notice.txt'
+		exclude 'META-INF/license.txt'
+		exclude 'META-INF/dependencies.txt'
+		exclude 'META-INF/LGPL2.1'
+		exclude 'LICENSE.txt'
+	}
+
+	android {
+		lintOptions {
+			abortOnError false
+		}
+	}
+}
+
+dependencies {
+	compile 'com.android.support:support-annotations:20.0.0'
+	compile 'org.projectlombok:lombok:1.14.8'
+	compile 'com.google.code.gson:gson:2.3'
+
+	compile 'com.3sidedcube.storm:util:0.1a'
+}
+
+apply from: 'gradle/sonatype.gradle'
