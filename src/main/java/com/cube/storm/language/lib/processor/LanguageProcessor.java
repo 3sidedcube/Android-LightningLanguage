@@ -1,5 +1,7 @@
 package com.cube.storm.language.lib.processor;
 
+import android.support.annotation.Nullable;
+
 import com.cube.storm.language.data.Language;
 import com.cube.storm.util.lib.processor.GsonProcessor;
 import com.google.gson.Gson;
@@ -19,13 +21,14 @@ import java.util.Map;
  */
 public class LanguageProcessor extends GsonProcessor<Language>
 {
-	@Override public Language deserialize(JsonElement json, Type arg1, JsonDeserializationContext arg2) throws JsonParseException
+	@Nullable
+	@Override public Language deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
 	{
 		Language language = new Language();
 
-		if (json != null && json.isJsonObject())
+		if (jsonElement != null && jsonElement.isJsonObject())
 		{
-			Map<String, String> decoded = new Gson().fromJson(json, new TypeToken<Map<String, String>>(){}.getType());
+			Map<String, String> decoded = new Gson().fromJson(jsonElement, new TypeToken<Map<String, String>>(){}.getType());
 			language.setValues(decoded);
 
 			return language;
