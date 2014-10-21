@@ -18,6 +18,5 @@ dependencies {
 	compile 'org.projectlombok:lombok:1.14.8'
 	compile 'com.google.code.gson:gson:2.3'
 
-	//This will change to a maven dependency
-	compile project(':Libraries:StormUtil')
+	compile 'com.3sidedcube.storm:util:0.1a'
 }
