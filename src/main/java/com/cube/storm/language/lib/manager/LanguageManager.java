@@ -46,6 +46,8 @@ public class LanguageManager
 		return instance;
 	}
 
+	private LanguageManager(){}
+
 	/**
 	 * Gets a string value from the selected language or falls back to android String resources if not
 	 * found using the same key
