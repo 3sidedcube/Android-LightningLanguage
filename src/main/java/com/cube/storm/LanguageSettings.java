@@ -103,12 +103,12 @@ public class LanguageSettings
 			this.construct = new LanguageSettings();
 			this.context = context.getApplicationContext();
 
-			languageManager(LanguageManager.getInstance());
+			languageManager(new LanguageManager(){});
 
 			registerUriResolver("file", new FileResolver());
 			registerUriResolver("assets", new AssetsResolver(this.context));
 
-			defaultLanguage(Uri.parse("assets://languages/" + LanguageManager.getInstance().getLocale(context) + ".json"));
+			defaultLanguage(Uri.parse("assets://languages/" + this.construct.getLanguageManager().getLocale(context) + ".json"));
 		}
 
 		/**
@@ -189,11 +189,11 @@ public class LanguageSettings
 		public LanguageSettings build()
 		{
 			LanguageSettings.instance = construct;
-			construct.defaultLanguage = LanguageManager.getInstance().loadLanguage(context, defaultLanguage);
+			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguage);
 
 			if (construct.fallbackLanguage != null)
 			{
-				construct.fallbackLanguage = LanguageManager.getInstance().loadLanguage(context, fallbackLanguage);
+				construct.fallbackLanguage = construct.getLanguageManager().loadLanguage(context, fallbackLanguage);
 			}
 
 			return LanguageSettings.instance;

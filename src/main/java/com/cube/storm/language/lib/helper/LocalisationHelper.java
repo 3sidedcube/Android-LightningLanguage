@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cube.storm.LanguageSettings;
-import com.cube.storm.language.lib.manager.LanguageManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,14 +77,14 @@ public class LocalisationHelper
 		{
 			TextView textView = (TextView)view;
 			String key = textView.getText().toString();
-			String value = LanguageManager.getInstance().getValue(textView.getContext(), key);
+			String value = LanguageSettings.getInstance().getLanguageManager().getValue(textView.getContext(), key);
 
 			textView.setText(value);
 
 			if (EditText.class.isAssignableFrom(textView.getClass()) && !TextUtils.isEmpty(textView.getHint()))
 			{
 				String hintKey = textView.getHint().toString();
-				String hintValue = LanguageManager.getInstance().getValue(textView.getContext(), hintKey);
+				String hintValue = LanguageSettings.getInstance().getLanguageManager().getValue(textView.getContext(), hintKey);
 
 				textView.setHint(hintValue);
 			}
