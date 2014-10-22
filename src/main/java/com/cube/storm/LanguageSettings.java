@@ -165,6 +165,19 @@ public class LanguageSettings
 		}
 
 		/**
+		 * Registers a uri resolvers
+		 *
+		 * @param resolvers The map of resolvers to register
+		 *
+		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
+		 */
+		public Builder registerUriResolver(Map<String, Resolver> resolvers)
+		{
+			construct.uriResolvers.putAll(resolvers);
+			return this;
+		}
+
+		/**
 		 * Builds the final settings object and sets its instance. Use {@link #getInstance()} to retrieve the settings
 		 * instance.
 		 *
