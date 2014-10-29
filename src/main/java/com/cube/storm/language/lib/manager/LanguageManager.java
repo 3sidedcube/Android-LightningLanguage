@@ -138,11 +138,9 @@ public abstract class LanguageManager
 						if (languageData != null)
 						{
 							Language language = gson.fromJson(new String(languageData, "UTF-8"), Language.class);
+							language.setSourceUri(languageUri.toString());
 
-							if (language != null)
-							{
-								return language;
-							}
+							return language;
 						}
 					}
 				}
