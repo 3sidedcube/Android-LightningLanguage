@@ -2,6 +2,7 @@ package com.cube.storm;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.cube.storm.language.data.Language;
 import com.cube.storm.language.lib.manager.LanguageManager;
@@ -50,6 +51,25 @@ public class LanguageSettings
 	 * Default private constructor
 	 */
 	private LanguageSettings(){}
+
+	/**
+	 * Reloads the default and fallback languages if they have been previously set using the same Uri as defined in
+	 * {@link com.cube.storm.LanguageSettings.Builder#defaultLanguage(android.net.Uri)} and {@link com.cube.storm.LanguageSettings.Builder#fallbackLanguage(android.net.Uri)}
+	 *
+	 * @param context The context to use to load the language
+	 */
+	public void reloadLanguage(@NonNull Context context)
+	{
+		if (getDefaultLanguage() != null)
+		{
+			this.defaultLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getDefaultLanguage().getSourceUri()));
+		}
+
+		if (getFallbackLanguage() != null)
+		{
+			this.fallbackLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getFallbackLanguage().getSourceUri()));
+		}
+	}
 
 	/**
 	 * Language manager used to resolve
