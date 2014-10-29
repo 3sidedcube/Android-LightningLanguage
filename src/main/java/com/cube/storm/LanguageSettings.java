@@ -93,7 +93,7 @@ public class LanguageSettings
 		/**
 		 * Temporary language Uris. Gets loaded when {@link #build()} is called
 		 */
-		private Uri defaultLanguage, fallbackLanguage;
+		private Uri defaultLanguageUri, fallbackLanguageUri;
 
 		/**
 		 * Default constructor
@@ -133,7 +133,7 @@ public class LanguageSettings
 		 */
 		public Builder defaultLanguage(Uri languageUri)
 		{
-			this.defaultLanguage = languageUri;
+			this.defaultLanguageUri = languageUri;
 			return this;
 		}
 
@@ -146,7 +146,7 @@ public class LanguageSettings
 		 */
 		public Builder fallbackLanguage(Uri languageUri)
 		{
-			this.fallbackLanguage = languageUri;
+			this.fallbackLanguageUri = languageUri;
 			return this;
 		}
 
@@ -189,11 +189,11 @@ public class LanguageSettings
 		public LanguageSettings build()
 		{
 			LanguageSettings.instance = construct;
-			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguage);
+			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguageUri);
 
 			if (construct.fallbackLanguage != null)
 			{
-				construct.fallbackLanguage = construct.getLanguageManager().loadLanguage(context, fallbackLanguage);
+				construct.fallbackLanguage = construct.getLanguageManager().loadLanguage(context, fallbackLanguageUri);
 			}
 
 			return LanguageSettings.instance;
