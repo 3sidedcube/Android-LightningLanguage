@@ -17,6 +17,14 @@ import lombok.Setter;
  */
 public class Language implements Serializable
 {
+	/**
+	 * Source Uri of the language object
+	 */
+	@Getter @Setter protected String sourceUri;
+
+	/**
+	 * Values of the language file
+	 */
 	@Getter @Setter protected Map<String, String> values = new HashMap<String, String>(0);
 
 	/**

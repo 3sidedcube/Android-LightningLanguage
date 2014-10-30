@@ -2,6 +2,7 @@ package com.cube.storm;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.cube.storm.language.data.Language;
 import com.cube.storm.language.lib.manager.LanguageManager;
@@ -52,6 +53,25 @@ public class LanguageSettings
 	private LanguageSettings(){}
 
 	/**
+	 * Reloads the default and fallback languages if they have been previously set using the same Uri as defined in
+	 * {@link com.cube.storm.LanguageSettings.Builder#defaultLanguage(android.net.Uri)} and {@link com.cube.storm.LanguageSettings.Builder#fallbackLanguage(android.net.Uri)}
+	 *
+	 * @param context The context to use to load the language
+	 */
+	public void reloadLanguage(@NonNull Context context)
+	{
+		if (getDefaultLanguage() != null)
+		{
+			this.defaultLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getDefaultLanguage().getSourceUri()));
+		}
+
+		if (getFallbackLanguage() != null)
+		{
+			this.fallbackLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getFallbackLanguage().getSourceUri()));
+		}
+	}
+
+	/**
 	 * Language manager used to resolve
 	 */
 	@Getter private LanguageManager languageManager;
@@ -93,7 +113,7 @@ public class LanguageSettings
 		/**
 		 * Temporary language Uris. Gets loaded when {@link #build()} is called
 		 */
-		private Uri defaultLanguage, fallbackLanguage;
+		private Uri defaultLanguageUri, fallbackLanguageUri;
 
 		/**
 		 * Default constructor
@@ -133,7 +153,7 @@ public class LanguageSettings
 		 */
 		public Builder defaultLanguage(Uri languageUri)
 		{
-			this.defaultLanguage = languageUri;
+			this.defaultLanguageUri = languageUri;
 			return this;
 		}
 
@@ -146,7 +166,7 @@ public class LanguageSettings
 		 */
 		public Builder fallbackLanguage(Uri languageUri)
 		{
-			this.fallbackLanguage = languageUri;
+			this.fallbackLanguageUri = languageUri;
 			return this;
 		}
 
@@ -189,11 +209,11 @@ public class LanguageSettings
 		public LanguageSettings build()
 		{
 			LanguageSettings.instance = construct;
-			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguage);
+			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguageUri);
 
 			if (construct.fallbackLanguage != null)
 			{
-				construct.fallbackLanguage = construct.getLanguageManager().loadLanguage(context, fallbackLanguage);
+				construct.fallbackLanguage = construct.getLanguageManager().loadLanguage(context, fallbackLanguageUri);
 			}
 
 			return LanguageSettings.instance;
