@@ -211,7 +211,7 @@ public class LanguageSettings
 			LanguageSettings.instance = construct;
 			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguageUri);
 
-			if (construct.fallbackLanguage != null)
+			if (fallbackLanguageUri != null)
 			{
 				construct.fallbackLanguage = construct.getLanguageManager().loadLanguage(context, fallbackLanguageUri);
 			}
