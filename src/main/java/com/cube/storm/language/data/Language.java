@@ -32,12 +32,12 @@ public class Language implements Serializable
 	 *
 	 * @param id The ID of the string
 	 *
-	 * @return The language translation
+	 * @return The language translation or an empty string
 	 */
 	@NonNull
 	public String getValue(@NonNull String id)
 	{
-		return String.valueOf(values.get(id));
+		return values.get(id) == null ? "" : values.get(id);
 	}
 
 	/**
