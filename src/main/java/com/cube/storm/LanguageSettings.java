@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This is the entry point class of the library. To enable the use of the library, you must instantiate
@@ -74,23 +75,23 @@ public class LanguageSettings
 	/**
 	 * Language manager used to resolve
 	 */
-	@Getter private LanguageManager languageManager;
+	@Getter @Setter private LanguageManager languageManager;
 
 	/**
 	 * Uri resolver used to load a file based on it's protocol.
 	 */
-	@Getter private Map<String, Resolver> uriResolvers = new LinkedHashMap<String, Resolver>(2);
+	@Getter @Setter private Map<String, Resolver> uriResolvers = new LinkedHashMap<String, Resolver>(2);
 
 	/**
 	 * Default loaded language. This will default to what ever the device's locale currently is
 	 */
-	@Getter private Language defaultLanguage;
+	@Getter @Setter private Language defaultLanguage;
 
 	/**
 	 * The fallback language to use if a key wasn't found in the default language, or if the default
 	 * language was not loaded
 	 */
-	@Getter private Language fallbackLanguage;
+	@Getter @Setter private Language fallbackLanguage;
 
 	/**
 	 * The builder class for {@link com.cube.storm.LanguageSettings}. Use this to create a new {@link com.cube.storm.LanguageSettings} instance
