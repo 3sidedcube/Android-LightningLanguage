@@ -19,11 +19,11 @@ import lombok.Setter;
 /**
  * This is the entry point class of the library. To enable the use of the library, you must instantiate
  * a new {@link com.cube.storm.LanguageSettings.Builder} object in your {@link android.app.Application} singleton class.
- *
+ * <p/>
  * This class should not be directly instantiated.
  *
  * @author Callum Taylor
- * @project StormLanguage
+ * @project LightningLanguage
  */
 public class LanguageSettings
 {
@@ -92,6 +92,26 @@ public class LanguageSettings
 	 * language was not loaded
 	 */
 	@Getter @Setter private Language fallbackLanguage;
+
+	/**
+	 * Loads a language from the uri to set for {@link #defaultLanguage}
+	 *
+	 * @param languageUri The language Uri to load
+	 */
+	public void setDefaultLanguage(Context context, Uri languageUri)
+	{
+		defaultLanguage = getLanguageManager().loadLanguage(context, languageUri);
+	}
+
+	/**
+	 * Loads a language from the uri to set for {@link #fallbackLanguage}
+	 *
+	 * @param languageUri The language Uri to load
+	 */
+	public void setFallbackLanguage(Context context, Uri languageUri)
+	{
+		fallbackLanguage = getLanguageManager().loadLanguage(context, languageUri);
+	}
 
 	/**
 	 * The builder class for {@link com.cube.storm.LanguageSettings}. Use this to create a new {@link com.cube.storm.LanguageSettings} instance
