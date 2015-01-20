@@ -77,14 +77,14 @@ public class LocalisationHelper
 		{
 			TextView textView = (TextView)view;
 			String key = textView.getText().toString();
-			String value = LanguageSettings.getInstance().getLanguageManager().getValue(textView.getContext(), key);
+			String value = localise(key);
 
 			textView.setText(value);
 
 			if (EditText.class.isAssignableFrom(textView.getClass()) && !TextUtils.isEmpty(textView.getHint()))
 			{
 				String hintKey = textView.getHint().toString();
-				String hintValue = LanguageSettings.getInstance().getLanguageManager().getValue(textView.getContext(), hintKey);
+				String hintValue = localise(hintKey);
 
 				textView.setHint(hintValue);
 			}
