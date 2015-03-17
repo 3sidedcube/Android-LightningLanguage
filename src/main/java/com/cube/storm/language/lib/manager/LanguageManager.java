@@ -21,7 +21,7 @@ import java.util.Locale;
  * Access this class via {@link com.cube.storm.LanguageSettings#getLanguageManager()}. Do not instantiate this class directly
  *
  * @author Callum Taylor
- * @project StormLanguage
+ * @project LightningLanguage
  */
 public abstract class LanguageManager
 {

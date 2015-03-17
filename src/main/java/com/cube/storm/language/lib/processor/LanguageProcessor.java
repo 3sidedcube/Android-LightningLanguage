@@ -14,10 +14,10 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Base processor class for matching a string with one defined in the language map
+ * Base processor class for inflating a language file into a {@link com.cube.storm.language.data.Language} object.
  *
  * @author Callum Taylor
- * @project StormLanguage
+ * @project LightningLanguage
  */
 public class LanguageProcessor extends GsonProcessor<Language>
 {
