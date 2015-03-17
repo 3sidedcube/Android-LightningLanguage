@@ -11,9 +11,13 @@ import lombok.Setter;
 
 /**
  * Basic language model with a map of key/value pairs for the language.
+ * <p/>
+ * This model contains a map of all the key/value localsations stored in a localisation file.
+ * The entire localisation language is loaded into one of these models. Be careful not to have a language
+ * pack that is too large else you may experience memory problems.
  *
  * @author Callum Taylor
- * @project StormLanguage
+ * @project LightningLanguage
  */
 public class Language implements Serializable
 {

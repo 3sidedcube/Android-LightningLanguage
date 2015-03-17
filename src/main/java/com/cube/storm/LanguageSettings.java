@@ -3,6 +3,7 @@ package com.cube.storm;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.cube.storm.language.data.Language;
 import com.cube.storm.language.lib.manager.LanguageManager;
@@ -21,6 +22,30 @@ import lombok.Setter;
  * a new {@link com.cube.storm.LanguageSettings.Builder} object in your {@link android.app.Application} singleton class.
  * <p/>
  * This class should not be directly instantiated.
+ * <p/>
+ * Example code.
+ * <pre>
+ languageSettings = new LanguageSettings.Builder(this)
+	.registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))
+	.defaultLanguage(Uri.parse("cache://languages/gbr_en.json"))
+	.fallbackLanguage(Uri.parse("cache://languages/gbr_es.json"))
+	.build();
+ * </pre>
+ * In order for the module to work correctly with {@code LightningContent} and standard Storm bundles, you must include
+ * {@code registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))} as part of your
+ * settings builder code.
+ * <p/>
+ * A {@link com.cube.storm.util.lib.processor.Processor} class is supplied for automatically converting Storm Text strings
+ * into localised strings. By default, Storm bundles use a key-value lookup for all strings, to convert from the key to the
+ * value, you must supply your {@code UiSettings} builder with {@link com.cube.storm.language.lib.processor.LanguageTextProcessor}.
+ * <p/>
+ * Example
+ * <pre>
+ uiSettings = new UiSettings.Builder(this)
+	.registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))
+	.textProcessor(new LanguageTextProcessor())
+ 	.build();
+ * </pre>
  *
  * @author Callum Taylor
  * @project LightningLanguage
@@ -96,9 +121,10 @@ public class LanguageSettings
 	/**
 	 * Loads a language from the uri to set for {@link #defaultLanguage}
 	 *
+	 * @param context The context to use to load the language
 	 * @param languageUri The language Uri to load
 	 */
-	public void setDefaultLanguage(Context context, Uri languageUri)
+	public void setDefaultLanguage(@NonNull Context context, @NonNull Uri languageUri)
 	{
 		defaultLanguage = getLanguageManager().loadLanguage(context, languageUri);
 	}
@@ -106,9 +132,10 @@ public class LanguageSettings
 	/**
 	 * Loads a language from the uri to set for {@link #fallbackLanguage}
 	 *
+	 * @param context The context to use to load the language
 	 * @param languageUri The language Uri to load
 	 */
-	public void setFallbackLanguage(Context context, Uri languageUri)
+	public void setFallbackLanguage(@NonNull Context context, @Nullable Uri languageUri)
 	{
 		fallbackLanguage = getLanguageManager().loadLanguage(context, languageUri);
 	}
@@ -139,7 +166,7 @@ public class LanguageSettings
 		/**
 		 * Default constructor
 		 */
-		public Builder(Context context)
+		public Builder(@NonNull Context context)
 		{
 			this.construct = new LanguageSettings();
 			this.context = context.getApplicationContext();
@@ -159,7 +186,7 @@ public class LanguageSettings
 		 *
 		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
 		 */
-		public Builder languageManager(LanguageManager manager)
+		public Builder languageManager(@NonNull LanguageManager manager)
 		{
 			construct.languageManager = manager;
 			return this;
@@ -172,7 +199,7 @@ public class LanguageSettings
 		 *
 		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
 		 */
-		public Builder defaultLanguage(Uri languageUri)
+		public Builder defaultLanguage(@NonNull Uri languageUri)
 		{
 			this.defaultLanguageUri = languageUri;
 			return this;
@@ -181,11 +208,11 @@ public class LanguageSettings
 		/**
 		 * Sets the fallback language uri to load
 		 *
-		 * @param languageUri The language Uri
+		 * @param languageUri The language Uri. Can be null to
 		 *
 		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
 		 */
-		public Builder fallbackLanguage(Uri languageUri)
+		public Builder fallbackLanguage(@Nullable Uri languageUri)
 		{
 			this.fallbackLanguageUri = languageUri;
 			return this;
