@@ -21,6 +21,30 @@ import lombok.Setter;
  * a new {@link com.cube.storm.LanguageSettings.Builder} object in your {@link android.app.Application} singleton class.
  * <p/>
  * This class should not be directly instantiated.
+ * <p/>
+ * Example code.
+ * <pre>
+ languageSettings = new LanguageSettings.Builder(this)
+	.registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))
+	.defaultLanguage(Uri.parse("cache://languages/gbr_en.json"))
+	.fallbackLanguage(Uri.parse("cache://languages/gbr_es.json"))
+	.build();
+ * </pre>
+ * In order for the module to work correctly with {@code LightningContent} and standard Storm bundles, you must include
+ * {@code registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))} as part of your
+ * settings builder code.
+ * <p/>
+ * A {@link com.cube.storm.util.lib.processor.Processor} class is supplied for automatically converting Storm Text strings
+ * into localised strings. By default, Storm bundles use a key-value lookup for all strings, to convert from the key to the
+ * value, you must supply your {@code UiSettings} builder with {@link com.cube.storm.language.lib.processor.LanguageTextProcessor}.
+ * <p/>
+ * Example
+ * <pre>
+ uiSettings = new UiSettings.Builder(this)
+	.registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))
+	.textProcessor(new LanguageTextProcessor())
+ 	.build();
+ * </pre>
  *
  * @author Callum Taylor
  * @project LightningLanguage
