@@ -86,12 +86,12 @@ public class LanguageSettings
 	 */
 	public void reloadLanguage(@NonNull Context context)
 	{
-		if (getDefaultLanguage() != null)
+		if (getDefaultLanguage() != null && getDefaultLanguage().getSourceUri() != null)
 		{
 			this.defaultLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getDefaultLanguage().getSourceUri()));
 		}
 
-		if (getFallbackLanguage() != null)
+		if (getFallbackLanguage() != null && getFallbackLanguage().getSourceUri() != null)
 		{
 			this.fallbackLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getFallbackLanguage().getSourceUri()));
 		}
