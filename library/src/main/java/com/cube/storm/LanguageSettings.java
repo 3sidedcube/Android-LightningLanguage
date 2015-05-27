@@ -6,8 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.cube.storm.language.data.Language;
+import com.cube.storm.language.lib.factory.FileFactory;
 import com.cube.storm.language.lib.manager.LanguageManager;
 import com.cube.storm.language.lib.processor.MethodProcessor;
+import com.cube.storm.language.lib.parser.LanguageBuilder;
 import com.cube.storm.util.lib.resolver.AssetsResolver;
 import com.cube.storm.util.lib.resolver.FileResolver;
 import com.cube.storm.util.lib.resolver.Resolver;
@@ -104,6 +106,11 @@ public class LanguageSettings
 	@Getter @Setter private LanguageManager languageManager;
 
 	/**
+	 * Factory class responsible for loading a file from disk based on its Uri
+	 */
+	@Getter @Setter private FileFactory fileFactory;
+
+	/**
 	 * Uri resolver used to load a file based on it's protocol.
 	 */
 	@Getter @Setter private Map<String, Resolver> uriResolvers = new LinkedHashMap<String, Resolver>(2);
@@ -123,6 +130,11 @@ public class LanguageSettings
 	 * Method processor class used to process methods part of variable localisations
 	 */
 	@Getter @Setter private MethodProcessor methodProcessor;
+
+	/**
+	 * The gson builder class used to build the language files
+	 */
+	@Getter @Setter private LanguageBuilder languageBuilder;
 
 	/**
 	 * Loads a language from the uri to set for {@link #defaultLanguage}
@@ -178,6 +190,8 @@ public class LanguageSettings
 			this.context = context.getApplicationContext();
 
 			languageManager(new LanguageManager(){});
+			fileFactory(new FileFactory(){});
+			languageBuilder(new LanguageBuilder(){});
 
 			registerUriResolver("file", new FileResolver());
 			registerUriResolver("assets", new AssetsResolver(this.context));
@@ -196,6 +210,32 @@ public class LanguageSettings
 		public Builder languageManager(@NonNull LanguageManager manager)
 		{
 			construct.languageManager = manager;
+			return this;
+		}
+
+		/**
+		 * Sets the default {@link com.cube.storm.language.lib.factory.FileFactory} for the module
+		 *
+		 * @param fileFactory The new {@link com.cube.storm.language.lib.factory.FileFactory}
+		 *
+		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
+		 */
+		public Builder fileFactory(FileFactory fileFactory)
+		{
+			construct.fileFactory = fileFactory;
+			return this;
+		}
+
+		/**
+		 * Sets the default {@link com.cube.storm.language.lib.parser.LanguageBuilder} for the module
+		 *
+		 * @param languageBuilder The new {@link com.cube.storm.language.lib.parser.LanguageBuilder}
+		 *
+		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
+		 */
+		public Builder languageBuilder(LanguageBuilder languageBuilder)
+		{
+			construct.languageBuilder = languageBuilder;
 			return this;
 		}
 
