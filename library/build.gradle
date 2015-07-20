@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+
+android {
+	compileSdkVersion 21
+	buildToolsVersion "21.1.2"
+
+	defaultConfig {
+		minSdkVersion 15
+		targetSdkVersion 21
+	}
+
+	packagingOptions {
+		exclude 'META-INF/DEPENDENCIES.txt'
+		exclude 'META-INF/LICENSE.txt'
+		exclude 'META-INF/NOTICE.txt'
+		exclude 'META-INF/NOTICE'
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/DEPENDENCIES'
+		exclude 'META-INF/notice.txt'
+		exclude 'META-INF/license.txt'
+		exclude 'META-INF/dependencies.txt'
+		exclude 'META-INF/LGPL2.1'
+		exclude 'LICENSE.txt'
+	}
+
+	android {
+		lintOptions {
+			abortOnError false
+		}
+	}
+}
+
+dependencies {
+	compile 'com.android.support:support-annotations:22.2.0'
+	compile 'org.projectlombok:lombok:1.14.8'
+	compile 'com.google.code.gson:gson:2.3'
+
+	compile 'com.3sidedcube.storm:util:0.3-internal'
+}
+
+//apply from: '../gradle/sonatype.gradle'
+//apply from: '../gradle/artifactory.gradle'
