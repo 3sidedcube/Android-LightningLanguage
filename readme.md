@@ -41,7 +41,7 @@ See the [Javadoc](http://3sidedcube.github.io/Android-LightningLanguage/) for fu
 
 #Contributors
 
-[Callum Taylor (9A8BAD)](http://keybase.io/scruffyfox), [Matt Allen (DB74F5)](https://keybase.io/mallen), [Alan Le Fournis (067EA0)](https://keybase.io/alan3sc), Luke Reed
+[Callum Taylor (9A8BAD)](http://keybase.io/scruffyfox), [Tim Mathews (5C4869)](https://keybase.io/timxyz), [Matt Allen (DB74F5)](https://keybase.io/mallen), [Alan Le Fournis (067EA0)](https://keybase.io/alan3sc)
 
 #License
 
