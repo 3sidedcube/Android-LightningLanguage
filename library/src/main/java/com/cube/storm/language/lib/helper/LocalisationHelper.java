@@ -18,6 +18,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Helper class for localising views in an activity/fragment/view group
@@ -51,7 +53,21 @@ public class LocalisationHelper
 			{
 				for (Mapping mapping : mappings)
 				{
-					value = value.replaceAll("(\\{" + mapping.getKey() + "\\})", String.valueOf(mapping.getValue()));
+					Pattern compile = Pattern.compile("(\\{" + mapping.getKey() + "(\\}?))");
+					Matcher matcher = compile.matcher(value);
+
+					while (matcher.find())
+					{
+						String found = matcher.group();
+						String replacement = "{" + mapping.getValue();
+
+						if (found.endsWith("}"))
+						{
+							replacement += "}";
+						}
+
+						value = value.replace(matcher.group(), replacement);
+					}
 				}
 			}
 
