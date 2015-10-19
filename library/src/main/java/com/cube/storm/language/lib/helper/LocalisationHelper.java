@@ -68,6 +68,8 @@ public class LocalisationHelper
 
 						value = value.replace(matcher.group(), replacement);
 					}
+
+					value = LanguageSettings.getInstance().getMethodProcessor().process(mapping.getValue(), value);
 				}
 			}
 
