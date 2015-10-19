@@ -10,8 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cube.storm.LanguageSettings;
+import com.cube.storm.language.lib.annotation.Localise;
+import com.cube.storm.language.lib.processor.Mapping;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,12 +41,20 @@ public class LocalisationHelper
 	 * @return The mapped value, or the key if the value was empty
 	 */
 	@NonNull
-	public static String localise(@NonNull String key)
+	public static String localise(@NonNull String key, Mapping... mappings)
 	{
 		String value = LanguageSettings.getInstance().getLanguageManager().getValue(key);
 
 		if (!TextUtils.isEmpty(value))
 		{
+			if (mappings != null)
+			{
+				for (Mapping mapping : mappings)
+				{
+					value = value.replaceAll("(\\{" + mapping.getKey() + "\\})", String.valueOf(mapping.getValue()));
+				}
+			}
+
 			return value;
 		}
 
@@ -53,9 +66,12 @@ public class LocalisationHelper
 	 *
 	 * @param activity The {@link android.app.Activity} to localise
 	 */
-	public static void localise(@NonNull Activity activity)
+	public static void localise(@NonNull Activity activity, Mapping... mappings)
 	{
-		localise((ViewGroup)activity.findViewById(android.R.id.content));
+		List<Mapping> mappingsList = getTaggedLocalisations(activity);
+		mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
+
+		localise((ViewGroup)activity.findViewById(android.R.id.content), mappingsList.toArray(new Mapping[mappingsList.size()]));
 	}
 
 	/**
@@ -63,9 +79,12 @@ public class LocalisationHelper
 	 *
 	 * @param fragment The fragment to localise
 	 */
-	public static void localise(@NonNull Fragment fragment)
+	public static void localise(@NonNull Fragment fragment, Mapping... mappings)
 	{
-		localise((ViewGroup)fragment.getView());
+		List<Mapping> mappingsList = getTaggedLocalisations(fragment);
+		mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
+
+		localise((ViewGroup)fragment.getView(), mappings);
 	}
 
 	/**
@@ -73,24 +92,24 @@ public class LocalisationHelper
 	 *
 	 * @param view The view to localise
 	 */
-	public static void localise(@NonNull View view)
+	public static void localise(@NonNull View view, Mapping... mappings)
 	{
 		if (view instanceof ViewGroup)
 		{
-			localise((ViewGroup)view);
+			localise((ViewGroup)view, mappings);
 		}
 		else if (view instanceof TextView)
 		{
 			TextView textView = (TextView)view;
 			String key = textView.getText().toString();
-			String value = localise(key);
+			String value = localise(key, mappings);
 
 			textView.setText(value);
 
 			if (EditText.class.isAssignableFrom(textView.getClass()) && !TextUtils.isEmpty(textView.getHint()))
 			{
 				String hintKey = textView.getHint().toString();
-				String hintValue = localise(hintKey);
+				String hintValue = localise(hintKey, mappings);
 
 				textView.setHint(hintValue);
 			}
@@ -102,13 +121,13 @@ public class LocalisationHelper
 	 *
 	 * @param rootView The root view to start looping through
 	 */
-	public static void localise(@NonNull ViewGroup rootView)
+	public static void localise(@NonNull ViewGroup rootView, Mapping... mappings)
 	{
 		ArrayList<? extends TextView> textViews = (ArrayList<? extends TextView>)findAllChildrenByInstance(rootView, TextView.class);
 
 		for (TextView textView : textViews)
 		{
-			localise(textView);
+			localise(textView, mappings);
 		}
 	}
 
