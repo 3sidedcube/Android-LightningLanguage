@@ -170,11 +170,6 @@ public class LanguageSettings
 		private Uri defaultLanguageUri, fallbackLanguageUri;
 
 		/**
-		 * The temporary instance of the {@link LanguageSettings#methodProcessor} variable
-		 */
-		private MethodProcessor processor;
-
-		/**
 		 * Default constructor
 		 */
 		public Builder(@NonNull Context context)
@@ -239,7 +234,7 @@ public class LanguageSettings
 		 */
 		public Builder methodProcessor(@NonNull MethodProcessor processor)
 		{
-			this.processor = processor;
+			construct.methodProcessor = processor;
 			return this;
 		}
 
