@@ -1,4 +1,6 @@
 {
 	"string1" : "String 1",
-	"string2" : "String {VARIABLE} {VARIABLE.upperCase}"
+	"string2" : "String {VARIABLE}",
+	"string3" : "{VARIABLE.upperCase}",
+	"string4" : "{VARIABLE2}"
 }

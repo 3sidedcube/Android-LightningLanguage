@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.cube.storm.LanguageSettings;
 import com.cube.storm.language.lib.annotation.Localise;
 import com.cube.storm.language.lib.helper.LocalisationHelper;
+import com.cube.storm.language.lib.processor.Mapping;
 
 import junit.framework.Assert;
 
@@ -17,7 +18,7 @@ import junit.framework.Assert;
  */
 public class ExampleActivity extends Activity
 {
-	@Localise("VARIABLE") private int count = 2;
+	@Localise("VARIABLE") private String count = "two";
 
 	@Override protected void onCreate(Bundle savedInstanceState)
 	{
@@ -27,14 +28,20 @@ public class ExampleActivity extends Activity
 			.defaultLanguage(Uri.parse("assets://gbr_en.json"))
 			.build();
 
+		// Standard localisation
 		String value1 = LocalisationHelper.localise("string1");
 		Assert.assertEquals(value1, "String 1");
 
+		// View localisation with variable
 		TextView text = new TextView(this);
 		text.setText("string2");
 		setContentView(text);
 
 		LocalisationHelper.localise(this);
-//		Assert.assertEquals(text.getText().toString(), "String 2");
+		Assert.assertEquals(text.getText().toString(), "String two");
+
+		// Manual variable localisation
+		String value3 = LocalisationHelper.localise("string3", new Mapping("VARIABLE", "Localisation 3"));
+		Assert.assertEquals(value3, "Localisation 3");
 	}
 }
