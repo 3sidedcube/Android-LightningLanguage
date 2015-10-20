@@ -29,6 +29,10 @@ import java.util.regex.Pattern;
  * <p/>
  * You can localise on a string-by-string basis, or you can include the localisation keys directly in your XML in either a {@link android.widget.TextView}'s {@link android.widget.TextView#setText} method
  * or a {@link android.widget.EditText#setHint} method. All subclasses of {@link android.widget.TextView} will be included, such as {@link android.widget.Button}
+ * <p/>
+ * Localisation variables are supported with the format of {@code {KEY}} in localisations. You can use the {@link Mapping} class as a KV param for the localise
+ * methods, or you can use the {@link Localise} annotation to automatically use when populating localisations via {@link LocalisationHelper#localise(Activity, Mapping...)},
+ * {@link LocalisationHelper#localise(Fragment, Mapping...)}, or {@link LocalisationHelper#localise(View, Mapping...)}
  *
  * @author Callum Taylor
  * @project LightningLanguage
@@ -39,6 +43,7 @@ public class LocalisationHelper
 	 * Localises a string from the key.
 	 *
 	 * @param key The key to look up
+	 * @param mappings Optional array of mappings for variables
 	 *
 	 * @return The mapped value, or the key if the value was empty
 	 */
@@ -83,6 +88,7 @@ public class LocalisationHelper
 	 * Loops through an {@link android.app.Activity}'s content view and localises the {@link android.widget.TextView} and subclasses of {@link android.widget.TextView}
 	 *
 	 * @param activity The {@link android.app.Activity} to localise
+	 * @param mappings Optional array of mappings for variables
 	 */
 	public static void localise(@NonNull Activity activity, Mapping... mappings)
 	{
@@ -96,6 +102,7 @@ public class LocalisationHelper
 	 * Loops through a fragment's content view and localises the {@link android.widget.TextView}
 	 *
 	 * @param fragment The fragment to localise
+	 * @param mappings Optional array of mappings for variables
 	 */
 	public static void localise(@NonNull Fragment fragment, Mapping... mappings)
 	{
@@ -109,6 +116,7 @@ public class LocalisationHelper
 	 * Localises a {@link android.view.View}, or loops through if the {@link android.view.View} is a {@link android.view.ViewGroup} and localises any {@link android.widget.TextView} or {@link android.widget.EditText}
 	 *
 	 * @param view The view to localise
+	 * @param mappings Optional array of mappings for variables
 	 */
 	public static void localise(@NonNull View view, Mapping... mappings)
 	{
@@ -142,6 +150,7 @@ public class LocalisationHelper
 	 * Loops through a {@link android.view.ViewGroup}'s children and localises the {@link android.widget.TextView}
 	 *
 	 * @param rootView The root view to start looping through
+	 * @param mappings Optional array of mappings for variables
 	 */
 	public static void localise(@NonNull ViewGroup rootView, Mapping... mappings)
 	{
