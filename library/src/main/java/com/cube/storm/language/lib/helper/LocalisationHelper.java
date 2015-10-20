@@ -118,6 +118,10 @@ public class LocalisationHelper
 		}
 		else if (view instanceof TextView)
 		{
+			List<Mapping> mappingsList = getTaggedLocalisations(view.getContext());
+			mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
+			mappings = mappingsList.toArray(new Mapping[mappingsList.size()]);
+
 			TextView textView = (TextView)view;
 			String key = textView.getText().toString();
 			String value = localise(key, mappings);
