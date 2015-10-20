@@ -10,9 +10,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cube.storm.LanguageSettings;
+import com.cube.storm.language.lib.annotation.Localise;
+import com.cube.storm.language.lib.processor.Mapping;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Helper class for localising views in an activity/fragment/view group
@@ -22,6 +29,10 @@ import java.util.List;
  * <p/>
  * You can localise on a string-by-string basis, or you can include the localisation keys directly in your XML in either a {@link android.widget.TextView}'s {@link android.widget.TextView#setText} method
  * or a {@link android.widget.EditText#setHint} method. All subclasses of {@link android.widget.TextView} will be included, such as {@link android.widget.Button}
+ * <p/>
+ * Localisation variables are supported with the format of {@code {KEY}} in localisations. You can use the {@link Mapping} class as a KV param for the localise
+ * methods, or you can use the {@link Localise} annotation to automatically use when populating localisations via {@link LocalisationHelper#localise(Activity, Mapping...)},
+ * {@link LocalisationHelper#localise(Fragment, Mapping...)}, or {@link LocalisationHelper#localise(View, Mapping...)}
  *
  * @author Callum Taylor
  * @project LightningLanguage
@@ -32,16 +43,41 @@ public class LocalisationHelper
 	 * Localises a string from the key.
 	 *
 	 * @param key The key to look up
+	 * @param mappings Optional array of mappings for variables
 	 *
 	 * @return The mapped value, or the key if the value was empty
 	 */
 	@NonNull
-	public static String localise(@NonNull String key)
+	public static String localise(@NonNull String key, Mapping... mappings)
 	{
 		String value = LanguageSettings.getInstance().getLanguageManager().getValue(key);
 
 		if (!TextUtils.isEmpty(value))
 		{
+			if (mappings != null)
+			{
+				for (Mapping mapping : mappings)
+				{
+					Pattern compile = Pattern.compile("(\\{" + mapping.getKey() + "(\\}?))");
+					Matcher matcher = compile.matcher(value);
+
+					while (matcher.find())
+					{
+						String found = matcher.group();
+						String replacement = "{" + mapping.getValue();
+
+						if (found.endsWith("}"))
+						{
+							replacement += "}";
+						}
+
+						value = value.replace(matcher.group(), replacement);
+					}
+
+					value = LanguageSettings.getInstance().getMethodProcessor().process(mapping.getValue(), value);
+				}
+			}
+
 			return value;
 		}
 
@@ -52,45 +88,58 @@ public class LocalisationHelper
 	 * Loops through an {@link android.app.Activity}'s content view and localises the {@link android.widget.TextView} and subclasses of {@link android.widget.TextView}
 	 *
 	 * @param activity The {@link android.app.Activity} to localise
+	 * @param mappings Optional array of mappings for variables
 	 */
-	public static void localise(@NonNull Activity activity)
+	public static void localise(@NonNull Activity activity, Mapping... mappings)
 	{
-		localise((ViewGroup)activity.findViewById(android.R.id.content));
+		List<Mapping> mappingsList = getTaggedLocalisations(activity);
+		mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
+
+		localise((ViewGroup)activity.findViewById(android.R.id.content), mappingsList.toArray(new Mapping[mappingsList.size()]));
 	}
 
 	/**
 	 * Loops through a fragment's content view and localises the {@link android.widget.TextView}
 	 *
 	 * @param fragment The fragment to localise
+	 * @param mappings Optional array of mappings for variables
 	 */
-	public static void localise(@NonNull Fragment fragment)
+	public static void localise(@NonNull Fragment fragment, Mapping... mappings)
 	{
-		localise((ViewGroup)fragment.getView());
+		List<Mapping> mappingsList = getTaggedLocalisations(fragment);
+		mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
+
+		localise((ViewGroup)fragment.getView(), mappings);
 	}
 
 	/**
 	 * Localises a {@link android.view.View}, or loops through if the {@link android.view.View} is a {@link android.view.ViewGroup} and localises any {@link android.widget.TextView} or {@link android.widget.EditText}
 	 *
 	 * @param view The view to localise
+	 * @param mappings Optional array of mappings for variables
 	 */
-	public static void localise(@NonNull View view)
+	public static void localise(@NonNull View view, Mapping... mappings)
 	{
 		if (view instanceof ViewGroup)
 		{
-			localise((ViewGroup)view);
+			localise((ViewGroup)view, mappings);
 		}
 		else if (view instanceof TextView)
 		{
+			List<Mapping> mappingsList = getTaggedLocalisations(view.getContext());
+			mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
+			mappings = mappingsList.toArray(new Mapping[mappingsList.size()]);
+
 			TextView textView = (TextView)view;
 			String key = textView.getText().toString();
-			String value = localise(key);
+			String value = localise(key, mappings);
 
 			textView.setText(value);
 
 			if (EditText.class.isAssignableFrom(textView.getClass()) && !TextUtils.isEmpty(textView.getHint()))
 			{
 				String hintKey = textView.getHint().toString();
-				String hintValue = localise(hintKey);
+				String hintValue = localise(hintKey, mappings);
 
 				textView.setHint(hintValue);
 			}
@@ -101,14 +150,15 @@ public class LocalisationHelper
 	 * Loops through a {@link android.view.ViewGroup}'s children and localises the {@link android.widget.TextView}
 	 *
 	 * @param rootView The root view to start looping through
+	 * @param mappings Optional array of mappings for variables
 	 */
-	public static void localise(@NonNull ViewGroup rootView)
+	public static void localise(@NonNull ViewGroup rootView, Mapping... mappings)
 	{
 		ArrayList<? extends TextView> textViews = (ArrayList<? extends TextView>)findAllChildrenByInstance(rootView, TextView.class);
 
 		for (TextView textView : textViews)
 		{
-			localise(textView);
+			localise(textView, mappings);
 		}
 	}
 
@@ -142,5 +192,62 @@ public class LocalisationHelper
 		}
 
 		return (List<T>)views;
+	}
+
+	/**
+	 * Gets a list of @Localise tagged variables to use as replacements for variable localisations
+	 *
+	 * @param cls The class to scan
+	 *
+	 * @return The list of {@link Mapping}. Can be empty.
+	 */
+	@NonNull
+	private static List<Mapping> getTaggedLocalisations(@NonNull Object cls)
+	{
+		List<Mapping> mappings = new ArrayList<>();
+
+		if (cls.getClass().getDeclaredFields() != null)
+		{
+			ArrayList<Method> methods = new ArrayList<Method>();
+			ArrayList<Field> fields = new ArrayList<Field>();
+			Class objOrSuper = cls.getClass();
+
+			while (objOrSuper != null)
+			{
+				for (Field field : objOrSuper.getDeclaredFields())
+				{
+					if (field.isAnnotationPresent(Localise.class))
+					{
+						fields.add(field);
+					}
+				}
+
+				objOrSuper = objOrSuper.getSuperclass();
+			}
+
+			for (Field field : fields)
+			{
+				if (field.isAnnotationPresent(Localise.class))
+				{
+					Localise variable = (Localise)field.getAnnotation(Localise.class);
+
+					try
+					{
+						field.setAccessible(true);
+
+						String key = ((Localise)variable).value();
+						Object value = field.get(cls);
+
+						mappings.add(new Mapping(key, value));
+					}
+					catch (IllegalAccessException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		return mappings;
 	}
 }
