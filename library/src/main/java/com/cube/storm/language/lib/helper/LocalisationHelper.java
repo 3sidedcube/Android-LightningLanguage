@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -82,6 +83,24 @@ public class LocalisationHelper
 		}
 
 		return key;
+	}
+
+	/**
+	 * Lopps through a menu and attempts to localise the titles of each item
+	 *
+	 * @param menu The menu to localise
+	 * @param mappings Optional array of mappings for variables
+	 */
+	public static void localise(@NonNull Menu menu, Mapping... mappings)
+	{
+		for (int index = 0; index < menu.size(); index++)
+		{
+			if (!TextUtils.isEmpty(menu.getItem(index).getTitle()))
+			{
+				String localised = localise(menu.getItem(index).getTitle().toString(), mappings);
+				menu.getItem(index).setTitle(localised);
+			}
+		}
 	}
 
 	/**
