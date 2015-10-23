@@ -14,8 +14,6 @@ import com.cube.storm.LanguageSettings;
 import com.cube.storm.language.lib.annotation.Localise;
 import com.cube.storm.language.lib.processor.Mapping;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -111,7 +109,7 @@ public class LocalisationHelper
 	 */
 	public static void localise(@NonNull Activity activity, Mapping... mappings)
 	{
-		List<Mapping> mappingsList = getTaggedLocalisations(activity);
+		List<Mapping> mappingsList = Mapping.getTaggedLocalisations(activity);
 		mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
 
 		localise((ViewGroup)activity.findViewById(android.R.id.content), mappingsList.toArray(new Mapping[mappingsList.size()]));
@@ -125,7 +123,7 @@ public class LocalisationHelper
 	 */
 	public static void localise(@NonNull Fragment fragment, Mapping... mappings)
 	{
-		List<Mapping> mappingsList = getTaggedLocalisations(fragment);
+		List<Mapping> mappingsList = Mapping.getTaggedLocalisations(fragment);
 		mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
 
 		localise((ViewGroup)fragment.getView(), mappings);
@@ -145,7 +143,7 @@ public class LocalisationHelper
 		}
 		else if (view instanceof TextView)
 		{
-			List<Mapping> mappingsList = getTaggedLocalisations(view.getContext());
+			List<Mapping> mappingsList = Mapping.getTaggedLocalisations(view.getContext());
 			mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
 			mappings = mappingsList.toArray(new Mapping[mappingsList.size()]);
 
@@ -211,62 +209,5 @@ public class LocalisationHelper
 		}
 
 		return (List<T>)views;
-	}
-
-	/**
-	 * Gets a list of @Localise tagged variables to use as replacements for variable localisations
-	 *
-	 * @param cls The class to scan
-	 *
-	 * @return The list of {@link Mapping}. Can be empty.
-	 */
-	@NonNull
-	private static List<Mapping> getTaggedLocalisations(@NonNull Object cls)
-	{
-		List<Mapping> mappings = new ArrayList<>();
-
-		if (cls.getClass().getDeclaredFields() != null)
-		{
-			ArrayList<Method> methods = new ArrayList<Method>();
-			ArrayList<Field> fields = new ArrayList<Field>();
-			Class objOrSuper = cls.getClass();
-
-			while (objOrSuper != null)
-			{
-				for (Field field : objOrSuper.getDeclaredFields())
-				{
-					if (field.isAnnotationPresent(Localise.class))
-					{
-						fields.add(field);
-					}
-				}
-
-				objOrSuper = objOrSuper.getSuperclass();
-			}
-
-			for (Field field : fields)
-			{
-				if (field.isAnnotationPresent(Localise.class))
-				{
-					Localise variable = (Localise)field.getAnnotation(Localise.class);
-
-					try
-					{
-						field.setAccessible(true);
-
-						String key = ((Localise)variable).value();
-						Object value = field.get(cls);
-
-						mappings.add(new Mapping(key, value));
-					}
-					catch (IllegalAccessException e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-
-		return mappings;
 	}
 }
