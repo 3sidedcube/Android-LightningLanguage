@@ -35,7 +35,7 @@ dependencies {
 	compile 'org.projectlombok:lombok:1.14.8'
 	compile 'com.google.code.gson:gson:2.3'
 
-	compile 'com.3sidedcube.storm:util:0.3-internal'
+	compile 'com.3sidedcube.storm:util:0.3-streaming'
 }
 
 //apply from: '../gradle/sonatype.gradle'
