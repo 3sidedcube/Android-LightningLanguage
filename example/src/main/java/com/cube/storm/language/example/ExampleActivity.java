@@ -48,19 +48,20 @@ public class ExampleActivity extends Activity
 		Assert.assertEquals(value3, "Localisation 3");
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	@Override public boolean onCreateOptionsMenu(Menu menu) 
+	{
 		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_settings) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		if (item.getItemId() == R.id.menu_settings) 
+		{
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
-
 }
