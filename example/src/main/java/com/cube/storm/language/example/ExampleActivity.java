@@ -1,8 +1,11 @@
 package com.cube.storm.language.example;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.cube.storm.LanguageSettings;
@@ -43,5 +46,22 @@ public class ExampleActivity extends Activity
 		// Manual variable localisation
 		String value3 = LocalisationHelper.localise("string3", new Mapping("VARIABLE", "Localisation 3"));
 		Assert.assertEquals(value3, "Localisation 3");
+	}
+
+	@Override public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		getMenuInflater().inflate(R.menu.menu, menu);
+		return true;
+	}
+
+	@Override public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		if (item.getItemId() == R.id.menu_settings) 
+		{
+			startActivity(new Intent(this, SettingsActivity.class));
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
 	}
 }

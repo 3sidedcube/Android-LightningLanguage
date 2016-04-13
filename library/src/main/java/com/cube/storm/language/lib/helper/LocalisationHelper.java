@@ -2,6 +2,8 @@ package com.cube.storm.language.lib.helper;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.preference.Preference;
+import android.preference.PreferenceGroup;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -127,6 +129,38 @@ public class LocalisationHelper
 		mappingsList.addAll(new ArrayList<>(Arrays.asList(mappings)));
 
 		localise((ViewGroup)fragment.getView(), mappings);
+	}
+
+	/**
+	 * Localises a {@link android.preference.Preference}, or loops through a {@link android.preference.PreferenceGroup} and localises each child {@link android.preference.Preference} in the group.
+	 *
+	 * @param preference The {@link android.preference.Preference} or {@link android.preference.PreferenceGroup} that you want to localise
+	 * @param mappings Optional array of mappings for variables
+	 */
+	public static void localise(@NonNull Preference preference, Mapping... mappings)
+	{
+		CharSequence title = preference.getTitle();
+		if (!TextUtils.isEmpty(title))
+		{
+			preference.setTitle(LocalisationHelper.localise(title.toString(), mappings));
+		}
+
+		CharSequence summary = preference.getSummary();
+		if (!TextUtils.isEmpty(summary))
+		{
+			preference.setSummary(LocalisationHelper.localise(summary.toString(), mappings));
+		}
+
+		if (preference instanceof PreferenceGroup)
+		{
+			PreferenceGroup preferenceGroup = (PreferenceGroup)preference;
+			int preferenceCount = preferenceGroup.getPreferenceCount();
+
+			for (int index = 0; index < preferenceCount; index++)
+			{
+				localise(preferenceGroup.getPreference(index), mappings);
+			}
+		}
 	}
 
 	/**
