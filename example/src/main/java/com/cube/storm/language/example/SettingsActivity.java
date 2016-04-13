@@ -14,7 +14,8 @@ import com.cube.storm.language.lib.helper.LocalisationHelper;
 import junit.framework.Assert;
 
 /**
- * Created by jamiecruwys on 13/04/16.
+ * @author Jamie Cruwys
+ * @project LightningUtil
  */
 public class SettingsActivity extends Activity
 {
