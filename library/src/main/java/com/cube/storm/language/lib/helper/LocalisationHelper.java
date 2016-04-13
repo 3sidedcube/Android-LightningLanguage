@@ -158,7 +158,7 @@ public class LocalisationHelper
 
 			for (int index = 0; index < preferenceCount; index++)
 			{
-				localise(preferenceGroup.getPreference(index));
+				localise(preferenceGroup.getPreference(index), mappings);
 			}
 		}
 	}
