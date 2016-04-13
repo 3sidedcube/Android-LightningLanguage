@@ -153,7 +153,7 @@ public class LocalisationHelper
 
 		if (preference instanceof PreferenceGroup)
 		{
-			PreferenceGroup preferenceGroup = (PreferenceGroup) preference;
+			PreferenceGroup preferenceGroup = (PreferenceGroup)preference;
 			int preferenceCount = preferenceGroup.getPreferenceCount();
 
 			for (int index = 0; index < preferenceCount; index++)
