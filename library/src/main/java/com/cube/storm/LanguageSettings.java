@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.cube.storm.language.data.Language;
 import com.cube.storm.language.lib.manager.LanguageManager;
+import com.cube.storm.language.lib.processor.MethodProcessor;
 import com.cube.storm.util.lib.resolver.AssetsResolver;
 import com.cube.storm.util.lib.resolver.FileResolver;
 import com.cube.storm.util.lib.resolver.Resolver;
@@ -119,6 +120,11 @@ public class LanguageSettings
 	@Getter @Setter private Language fallbackLanguage;
 
 	/**
+	 * Method processor class used to process methods part of variable localisations
+	 */
+	@Getter @Setter private MethodProcessor methodProcessor;
+
+	/**
 	 * Loads a language from the uri to set for {@link #defaultLanguage}
 	 *
 	 * @param context The context to use to load the language
@@ -177,6 +183,7 @@ public class LanguageSettings
 			registerUriResolver("assets", new AssetsResolver(this.context));
 
 			defaultLanguage(Uri.parse("assets://languages/" + this.construct.getLanguageManager().getLocale(context) + ".json"));
+			methodProcessor(new MethodProcessor());
 		}
 
 		/**
@@ -215,6 +222,19 @@ public class LanguageSettings
 		public Builder fallbackLanguage(@Nullable Uri languageUri)
 		{
 			this.fallbackLanguageUri = languageUri;
+			return this;
+		}
+
+		/**
+		 * Sets the method processor to use when dealing with variable localisations
+		 *
+		 * @param processor The method processor
+		 *
+		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
+		 */
+		public Builder methodProcessor(@NonNull MethodProcessor processor)
+		{
+			construct.methodProcessor = processor;
 			return this;
 		}
 
