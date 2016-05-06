@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-	compileSdkVersion 22
-	buildToolsVersion "23.0.1"
+	compileSdkVersion 23
+	buildToolsVersion "23.0.2"
 
 	defaultConfig {
 		minSdkVersion 15
-		targetSdkVersion 22
+		targetSdkVersion 23
 	}
 
 	packagingOptions {
@@ -23,20 +23,90 @@ android {
 		exclude 'LICENSE.txt'
 	}
 
-	android {
-		lintOptions {
-			abortOnError false
-		}
+	lintOptions {
+		abortOnError false
 	}
 }
 
 dependencies {
-	compile 'com.android.support:support-annotations:22.2.0'
+	compile 'com.android.support:support-annotations:23.1.0'
 	compile 'org.projectlombok:lombok:1.14.8'
 	compile 'com.google.code.gson:gson:2.3'
 
-	compile 'com.3sidedcube.storm:util:0.3-internal'
+	compile 'com.3sidedcube.storm:util:0.4.1-internal'
+}
+
+def srcJava = 'src/main/java'
+def srcDelomboked = 'build/src-delomboked/main/java'
+
+task delombok {
+	inputs.files file(srcJava)
+	outputs.dir file(srcDelomboked)
+
+	doLast {
+		FileCollection collection = files(configurations.compile)
+		FileCollection sumTree = collection + fileTree(dir: 'bin')
+
+		ant.taskdef(name: 'delombok', classname: 'lombok.delombok.ant.DelombokTask', classpath: 'libs/lombok.jar')
+		ant.delombok(from:srcJava, to:srcDelomboked, classpath: sumTree.asPath)
+	}
+}
+
+def findClasses(File path)
+{
+	List<File> found = new ArrayList<File>();
+
+	for (File file : path.listFiles())
+	{
+		if (file.getName().equalsIgnoreCase("classes.jar"))
+		{
+			found.add(file);
+		}
+
+		if (file.isDirectory())
+		{
+			found.addAll(findClasses(file));
+		}
+	}
+
+	return found;
+}
+
+android.libraryVariants.all { variant ->
+	task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+		description "Generates Javadoc for $variant.name."
+
+		setDependsOn(['build', 'delombok'])
+		source = srcDelomboked
+
+		ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+		classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+
+		List<String> jars = new ArrayList<String>();
+		File dependencies = new File("build/intermediates/exploded-aar/")
+		for (File folder : dependencies.listFiles())
+		{
+			List<File> found = findClasses(folder);
+			for (File foundFile : found)
+			{
+				classpath += files(foundFile.getAbsolutePath())
+			}
+		}
+
+		options.links("http://3sidedcube.github.io/Android-LightningUtil/", "com.cube.storm.util");
+		options.links("http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/", "com.google.gson")
+		options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
+		options.links("http://docs.oracle.com/javase/7/docs/api/");
+		options.encoding("utf-8")
+
+		// exclude generated files
+		exclude '**/BuildConfig.java'
+		exclude '**/R.java'
+
+		// exclude any internal packages
+		exclude '**/com/acme/sdk/api/**'
+	}
 }
 
 //apply from: '../gradle/sonatype.gradle'
-//apply from: '../gradle/artifactory.gradle'
+apply from: '../gradle/artifactory.gradle'
