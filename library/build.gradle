@@ -9,20 +9,6 @@ android {
 		targetSdkVersion 23
 	}
 
-	packagingOptions {
-		exclude 'META-INF/DEPENDENCIES.txt'
-		exclude 'META-INF/LICENSE.txt'
-		exclude 'META-INF/NOTICE.txt'
-		exclude 'META-INF/NOTICE'
-		exclude 'META-INF/LICENSE'
-		exclude 'META-INF/DEPENDENCIES'
-		exclude 'META-INF/notice.txt'
-		exclude 'META-INF/license.txt'
-		exclude 'META-INF/dependencies.txt'
-		exclude 'META-INF/LGPL2.1'
-		exclude 'LICENSE.txt'
-	}
-
 	lintOptions {
 		abortOnError false
 	}
@@ -30,8 +16,8 @@ android {
 
 dependencies {
 	compile 'com.android.support:support-annotations:23.3.0'
-	compile 'org.projectlombok:lombok:1.14.8'
-	compile 'com.google.code.gson:gson:2.4'
+	compile 'org.projectlombok:lombok:1.16.8'
+	compile 'com.google.code.gson:gson:2.6.2'
 
 	compile 'com.3sidedcube.storm:util:0.4.2'
 }
