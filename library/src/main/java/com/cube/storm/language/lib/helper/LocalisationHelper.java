@@ -10,16 +10,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cube.storm.LanguageSettings;
-import com.cube.storm.language.lib.manager.LanguageManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Helper class for localising views in an activity/fragment/view group
+ * <p/>
+ * This is a convenience class for quick localisations of strings. You can use this class, or {@link com.cube.storm.LanguageSettings#getLanguageManager()} to localise
+ * your strings.
+ * <p/>
+ * You can localise on a string-by-string basis, or you can include the localisation keys directly in your XML in either a {@link android.widget.TextView}'s {@link android.widget.TextView#setText} method
+ * or a {@link android.widget.EditText#setHint} method. All subclasses of {@link android.widget.TextView} will be included, such as {@link android.widget.Button}
  *
  * @author Callum Taylor
- * @project StormLanguage
+ * @project LightningLanguage
  */
 public class LocalisationHelper
 {
@@ -28,7 +33,7 @@ public class LocalisationHelper
 	 *
 	 * @param key The key to look up
 	 *
-	 * @return The mapped value, or the key
+	 * @return The mapped value, or the key if the value was empty
 	 */
 	@NonNull
 	public static String localise(@NonNull String key)
@@ -44,9 +49,9 @@ public class LocalisationHelper
 	}
 
 	/**
-	 * Loops through an activity's content view and localises the TextViews
+	 * Loops through an {@link android.app.Activity}'s content view and localises the {@link android.widget.TextView} and subclasses of {@link android.widget.TextView}
 	 *
-	 * @param activity The activity to localise
+	 * @param activity The {@link android.app.Activity} to localise
 	 */
 	public static void localise(@NonNull Activity activity)
 	{
@@ -54,7 +59,7 @@ public class LocalisationHelper
 	}
 
 	/**
-	 * Loops through a fragment's content view and localises the TextViews
+	 * Loops through a fragment's content view and localises the {@link android.widget.TextView}
 	 *
 	 * @param fragment The fragment to localise
 	 */
@@ -64,7 +69,7 @@ public class LocalisationHelper
 	}
 
 	/**
-	 * Localises a view, or loops through if the view is a ViewGroup
+	 * Localises a {@link android.view.View}, or loops through if the {@link android.view.View} is a {@link android.view.ViewGroup} and localises any {@link android.widget.TextView} or {@link android.widget.EditText}
 	 *
 	 * @param view The view to localise
 	 */
@@ -78,14 +83,14 @@ public class LocalisationHelper
 		{
 			TextView textView = (TextView)view;
 			String key = textView.getText().toString();
-			String value = LanguageManager.getInstance().getValue(textView.getContext(), key);
+			String value = localise(key);
 
 			textView.setText(value);
 
 			if (EditText.class.isAssignableFrom(textView.getClass()) && !TextUtils.isEmpty(textView.getHint()))
 			{
 				String hintKey = textView.getHint().toString();
-				String hintValue = LanguageManager.getInstance().getValue(textView.getContext(), hintKey);
+				String hintValue = localise(hintKey);
 
 				textView.setHint(hintValue);
 			}
@@ -93,7 +98,7 @@ public class LocalisationHelper
 	}
 
 	/**
-	 * Loops through a ViewGroup's children and localises the text views
+	 * Loops through a {@link android.view.ViewGroup}'s children and localises the {@link android.widget.TextView}
 	 *
 	 * @param rootView The root view to start looping through
 	 */

@@ -16,36 +16,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 /**
- * Manager which controls the lookup and parsing of language files
+ * Manager which controls the lookup and parsing of language files.
+ * <p/>
+ * Access this class via {@link com.cube.storm.LanguageSettings#getLanguageManager()}. Do not instantiate this class directly
  *
  * @author Callum Taylor
- * @project StormLanguage
+ * @project LightningLanguage
  */
-public class LanguageManager
+public abstract class LanguageManager
 {
-	private static LanguageManager instance;
-
-	/**
-	 * Gets the language manager singleton or creates one if its null
-	 *
-	 * @return The language manager singleton
-	 */
-	public static LanguageManager getInstance()
-	{
-		if (instance == null)
-		{
-			synchronized(LanguageManager.class)
-			{
-				if (instance == null)
-				{
-					instance = new LanguageManager();
-				}
-			}
-		}
-
-		return instance;
-	}
-
 	/**
 	 * Gets a string value from the selected language or falls back to android String resources if not
 	 * found using the same key
@@ -159,11 +138,9 @@ public class LanguageManager
 						if (languageData != null)
 						{
 							Language language = gson.fromJson(new String(languageData, "UTF-8"), Language.class);
+							language.setSourceUri(languageUri.toString());
 
-							if (language != null)
-							{
-								return language;
-							}
+							return language;
 						}
 					}
 				}
