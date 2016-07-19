@@ -12,7 +12,7 @@ import java.util.List;
 import lombok.Getter;
 
 /**
- * Class for mapping key and value for localisations
+ * Class for mapping key and value for localisations. Keys do not require the inclusion of `{}`
  *
  * @author Callum Taylor
  * @project LightningLanguage
