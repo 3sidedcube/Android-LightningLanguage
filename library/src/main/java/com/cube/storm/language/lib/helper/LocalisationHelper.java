@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.cube.storm.LanguageSettings;
 import com.cube.storm.language.lib.annotation.Localise;
@@ -268,6 +269,17 @@ public class LocalisationHelper
 				String hintValue = localise(hintKey, mappings);
 
 				textView.setHint(hintValue);
+			}
+			else if (ToggleButton.class.isAssignableFrom(textView.getClass()))
+			{
+				String offKey = ((ToggleButton)textView).getTextOff().toString();
+				String offValue = localise(offKey, mappings);
+
+				String onKey = ((ToggleButton)textView).getTextOn().toString();
+				String onValue = localise(onKey, mappings);
+
+				((ToggleButton)textView).setTextOn(onValue);
+				((ToggleButton)textView).setTextOff(offValue);
 			}
 		}
 	}
