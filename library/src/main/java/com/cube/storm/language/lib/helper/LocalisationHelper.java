@@ -121,6 +121,11 @@ public class LocalisationHelper
 	{
 		for (int index = 0; index < menu.size(); index++)
 		{
+			if (menu.getItem(index).hasSubMenu())
+			{
+				localise((Menu)menu.getItem(index).getSubMenu(), mappings);
+			}
+
 			if (!TextUtils.isEmpty(menu.getItem(index).getTitle()))
 			{
 				String localised = localise(menu.getItem(index).getTitle().toString(), mappings);
