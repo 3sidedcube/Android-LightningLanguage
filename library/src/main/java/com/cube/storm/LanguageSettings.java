@@ -269,7 +269,7 @@ public class LanguageSettings
 		 */
 		public Builder localeUri(@Nullable Uri localeUri)
 		{
-			this.localeUri = languageUri;
+			this.localeUri = localeUri;
 			return this;
 		}
 
