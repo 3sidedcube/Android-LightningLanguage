@@ -30,8 +30,8 @@ import lombok.Setter;
  * <pre>
  languageSettings = new LanguageSettings.Builder(this)
 	.registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))
-	.defaultLanguage(Uri.parse("cache://languages/gbr_en.json"))
-	.fallbackLanguage(Uri.parse("cache://languages/gbr_es.json"))
+	.languageUri(Uri.parse("cache://languages/gbr.json"))
+	.localeUri(Uri.parse("cache://languages/gbr_fra.json"))
 	.build();
  * </pre>
  * In order for the module to work correctly with {@code LightningContent} and standard Storm bundles, you must include
@@ -83,7 +83,7 @@ public class LanguageSettings
 
 	/**
 	 * Reloads the default and fallback languages if they have been previously set using the same Uri as defined in
-	 * {@link com.cube.storm.LanguageSettings.Builder#defaultLanguage(android.net.Uri)} and {@link com.cube.storm.LanguageSettings.Builder#fallbackLanguage(android.net.Uri)}
+	 * {@link com.cube.storm.LanguageSettings.Builder#languageUri(android.net.Uri)} and {@link com.cube.storm.LanguageSettings.Builder#localeUri(Uri)} (android.net.Uri)}
 	 *
 	 * @param context The context to use to load the language
 	 */
@@ -94,9 +94,9 @@ public class LanguageSettings
 			this.defaultLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getDefaultLanguage().getSourceUri()));
 		}
 
-		if (getFallbackLanguage() != null && getFallbackLanguage().getSourceUri() != null)
+		if (getLocaleLanguage() != null && getLocaleLanguage().getSourceUri() != null)
 		{
-			this.fallbackLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getFallbackLanguage().getSourceUri()));
+			this.localeLanguage = getLanguageManager().loadLanguage(context, Uri.parse(getLocaleLanguage().getSourceUri()));
 		}
 	}
 
@@ -116,15 +116,15 @@ public class LanguageSettings
 	@Getter @Setter private Map<String, Resolver> uriResolvers = new LinkedHashMap<String, Resolver>(2);
 
 	/**
-	 * Default loaded language. This will default to what ever the device's locale currently is
+	 * Default loaded language. This will default to what ever the device's country currently is
 	 */
 	@Getter @Setter private Language defaultLanguage;
 
 	/**
-	 * The fallback language to use if a key wasn't found in the default language, or if the default
-	 * language was not loaded
+	 * Language pack loaded for specific locale. Locale language packs will only contain specific language overrides and
+	 * will fallback to the defined {@link #defaultLanguage} if not found.
 	 */
-	@Getter @Setter private Language fallbackLanguage;
+	@Getter @Setter private Language localeLanguage;
 
 	/**
 	 * Method processor class used to process methods part of variable localisations
@@ -148,14 +148,21 @@ public class LanguageSettings
 	}
 
 	/**
-	 * Loads a language from the uri to set for {@link #fallbackLanguage}
+	 * Loads a language from the uri to set for {@link #localeLanguage}
 	 *
 	 * @param context The context to use to load the language
-	 * @param languageUri The language Uri to load
+	 * @param languageUri The language Uri to load. Set to null to clear the locale language
 	 */
-	public void setFallbackLanguage(@NonNull Context context, @Nullable Uri languageUri)
+	public void setLocaleLanguage(@NonNull Context context, @Nullable Uri languageUri)
 	{
-		fallbackLanguage = getLanguageManager().loadLanguage(context, languageUri);
+		if (languageUri == null)
+		{
+			localeLanguage = null;
+		}
+		else
+		{
+			localeLanguage = getLanguageManager().loadLanguage(context, languageUri);
+		}
 	}
 
 	/**
@@ -179,7 +186,7 @@ public class LanguageSettings
 		/**
 		 * Temporary language Uris. Gets loaded when {@link #build()} is called
 		 */
-		private Uri defaultLanguageUri, fallbackLanguageUri;
+		private Uri languageUri, localeUri;
 
 		/**
 		 * Default constructor
@@ -196,7 +203,7 @@ public class LanguageSettings
 			registerUriResolver("file", new FileResolver());
 			registerUriResolver("assets", new AssetsResolver(this.context));
 
-			defaultLanguage(Uri.parse("assets://languages/" + this.construct.getLanguageManager().getLocale(context) + ".json"));
+			languageUri(Uri.parse("assets://languages/" + this.construct.getLanguageManager().getLocale(context) + ".json"));
 			methodProcessor(new MethodProcessor());
 		}
 
@@ -246,22 +253,23 @@ public class LanguageSettings
 		 *
 		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
 		 */
-		public Builder defaultLanguage(@NonNull Uri languageUri)
+		public Builder languageUri(@NonNull Uri languageUri)
 		{
-			this.defaultLanguageUri = languageUri;
+			this.languageUri = languageUri;
 			return this;
 		}
 
 		/**
-		 * Sets the fallback language uri to load
+		 * Sets the locale language uri to load. Locale language packs generally contain specific language overrides from the base language pack
+		 * specified from {@link #languageUri(Uri)}
 		 *
-		 * @param languageUri The language Uri. Can be null to
+		 * @param localeUri The language Uri. Can be null to
 		 *
 		 * @return The {@link com.cube.storm.LanguageSettings.Builder} instance for chaining
 		 */
-		public Builder fallbackLanguage(@Nullable Uri languageUri)
+		public Builder localeUri(@Nullable Uri localeUri)
 		{
-			this.fallbackLanguageUri = languageUri;
+			this.localeUri = languageUri;
 			return this;
 		}
 
@@ -309,7 +317,7 @@ public class LanguageSettings
 		 * Builds the final settings object and sets its instance. Use {@link #getInstance()} to retrieve the settings
 		 * instance.
 		 *
-		 * The languages set by {@link #defaultLanguage(android.net.Uri)} and {@link #fallbackLanguage(android.net.Uri)} are
+		 * The languages set by {@link #languageUri(android.net.Uri)} and {@link #localeUri(android.net.Uri)} are
 		 * loaded at this point.
 		 *
 		 * @return The newly set {@link com.cube.storm.LanguageSettings} instance
@@ -317,11 +325,11 @@ public class LanguageSettings
 		public LanguageSettings build()
 		{
 			LanguageSettings.instance = construct;
-			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguageUri);
+			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, languageUri);
 
-			if (fallbackLanguageUri != null)
+			if (localeUri != null)
 			{
-				construct.fallbackLanguage = construct.getLanguageManager().loadLanguage(context, fallbackLanguageUri);
+				construct.localeLanguage = construct.getLanguageManager().loadLanguage(context, localeUri);
 			}
 
 			return LanguageSettings.instance;
