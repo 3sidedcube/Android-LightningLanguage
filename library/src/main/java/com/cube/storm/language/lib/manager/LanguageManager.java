@@ -10,6 +10,8 @@ import com.cube.storm.language.data.Language;
 
 import java.util.Locale;
 
+import static com.cube.storm.LanguageSettings.getInstance;
+
 /**
  * Manager which controls the lookup and parsing of language files.
  * <p/>
@@ -32,8 +34,8 @@ public abstract class LanguageManager
 	@NonNull
 	public String getValue(@NonNull Context context, @NonNull String key)
 	{
-		if (LanguageSettings.getInstance().getDefaultLanguage().hasValue(key)
-		|| (LanguageSettings.getInstance().getFallbackLanguage() != null && LanguageSettings.getInstance().getFallbackLanguage().hasValue(key)))
+		if (getInstance().getDefaultLanguage().hasValue(key)
+		|| (getInstance().getLocaleLanguage() != null && getInstance().getLocaleLanguage().hasValue(key)))
 		{
 			return getValue(key);
 		}
@@ -51,7 +53,7 @@ public abstract class LanguageManager
 	}
 
 	/**
-	 * Gets a string value from the selected language
+	 * Gets string from {@link LanguageSettings#getLocaleLanguage()} or falls back to {@link LanguageSettings#getDefaultLanguage()}.
 	 *
 	 * @param key The key of the string to lookup
 	 *
@@ -60,11 +62,16 @@ public abstract class LanguageManager
 	@NonNull
 	public String getValue(@NonNull String key)
 	{
-		String value = LanguageSettings.getInstance().getDefaultLanguage().getValue(key);
+		String value = "";
 
-		if (TextUtils.isEmpty(value) && LanguageSettings.getInstance().getFallbackLanguage() != null)
+		if (getInstance().getLocaleLanguage() != null)
 		{
-			value = LanguageSettings.getInstance().getFallbackLanguage().getValue(key);
+			value = getInstance().getLocaleLanguage().getValue(key);
+		}
+
+		if (TextUtils.isEmpty(value))
+		{
+			value = getInstance().getDefaultLanguage().getValue(key);
 		}
 
 		return value;
@@ -82,13 +89,52 @@ public abstract class LanguageManager
 	 *
 	 * @param context The context to use to find the locale.
 	 *
-	 * @return The locale in the format `xxx_xx` (3 letter CC, 2 letter language)
+	 * @return The locale in the format `xxx_xxx` (3 letter CC, 3 letter language)
 	 */
 	@NonNull
 	public String getLocale(@NonNull Context context)
 	{
 		String region = context.getResources().getConfiguration().locale.getISO3Country().toLowerCase();
-		String locale = context.getResources().getConfiguration().locale.getLanguage();
+		String locale = context.getResources().getConfiguration().locale.getISO3Language().toLowerCase();
+		String languageSuffix = TextUtils.isEmpty(locale) ? "_eng" : "_" + locale.toLowerCase();
+
+		if (languageSuffix.toLowerCase().contains("iw"))
+		{
+			languageSuffix = languageSuffix.replace("iw", "he");
+		}
+		else if (languageSuffix.toLowerCase().contains("in"))
+		{
+			languageSuffix = languageSuffix.replace("in", "id");
+		}
+		else if (languageSuffix.toLowerCase().contains("ji"))
+		{
+			languageSuffix = languageSuffix.replace("ji", "yi");
+		}
+
+		return region + languageSuffix;
+	}
+
+	/**
+	 * Gets the locale of the device. Note: this does not return deprecated language codes.
+	 *
+	 * The following codes are converted:
+	 * <ul>
+	 * <li>iw -&gt; he</li>
+	 * <li>in -&gt; id</li>
+	 * <li>ji -&gt; yi</li>
+	 * </ul>
+	 *
+	 * This method is deprecated, you should use {@link #getLocale(Context)} instead that returns a 3 letter language code
+	 *
+	 * @param context The context to use to find the locale.
+	 *
+	 * @return The locale in the format `xxx_xxx` (3 letter CC, 2 letter language)
+	 */
+	@NonNull @Deprecated
+	public String getOldLocale(@NonNull Context context)
+	{
+		String region = context.getResources().getConfiguration().locale.getISO3Country().toLowerCase();
+		String locale = context.getResources().getConfiguration().locale.getLanguage().toLowerCase();
 		String languageSuffix = TextUtils.isEmpty(locale) ? "_en" : "_" + locale.toLowerCase();
 
 		if (languageSuffix.toLowerCase().contains("iw"))
@@ -116,7 +162,7 @@ public abstract class LanguageManager
 	@NonNull
 	public Language loadLanguage(@NonNull Context context, @NonNull Uri languageUri)
 	{
-		Language language = LanguageSettings.getInstance().getLanguageBuilder().buildLanguage(languageUri);
+		Language language = getInstance().getLanguageBuilder().buildLanguage(languageUri);
 
 		if (language != null)
 		{
