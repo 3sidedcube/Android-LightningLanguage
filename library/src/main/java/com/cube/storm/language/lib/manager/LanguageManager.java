@@ -115,6 +115,45 @@ public abstract class LanguageManager
 	}
 
 	/**
+	 * Gets the locale of the device. Note: this does not return deprecated language codes.
+	 *
+	 * The following codes are converted:
+	 * <ul>
+	 * <li>iw -&gt; he</li>
+	 * <li>in -&gt; id</li>
+	 * <li>ji -&gt; yi</li>
+	 * </ul>
+	 *
+	 * This method is deprecated, you should use {@link #getLocale(Context)} instead that returns a 3 letter language code
+	 *
+	 * @param context The context to use to find the locale.
+	 *
+	 * @return The locale in the format `xxx_xxx` (3 letter CC, 2 letter language)
+	 */
+	@NonNull @Deprecated
+	public String getOldLocale(@NonNull Context context)
+	{
+		String region = context.getResources().getConfiguration().locale.getISO3Country().toLowerCase();
+		String locale = context.getResources().getConfiguration().locale.getLanguage().toLowerCase();
+		String languageSuffix = TextUtils.isEmpty(locale) ? "_en" : "_" + locale.toLowerCase();
+
+		if (languageSuffix.toLowerCase().contains("iw"))
+		{
+			languageSuffix = languageSuffix.replace("iw", "he");
+		}
+		else if (languageSuffix.toLowerCase().contains("in"))
+		{
+			languageSuffix = languageSuffix.replace("in", "id");
+		}
+		else if (languageSuffix.toLowerCase().contains("ji"))
+		{
+			languageSuffix = languageSuffix.replace("ji", "yi");
+		}
+
+		return region + languageSuffix;
+	}
+
+	/**
 	 * Loads a language from the given Uri
 	 *
 	 * @param context The context to use to load the language
