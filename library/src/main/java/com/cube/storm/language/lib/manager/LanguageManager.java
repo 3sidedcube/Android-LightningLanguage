@@ -62,19 +62,19 @@ public abstract class LanguageManager
 	@NonNull
 	public String getValue(@NonNull String key)
 	{
-		String value = "";
+		String value = null;
 
-		if (getInstance().getLocaleLanguage() != null)
+		if (getInstance().getLocaleLanguage() != null && getInstance().getLocaleLanguage().hasValue(key))
 		{
 			value = getInstance().getLocaleLanguage().getValue(key);
 		}
 
-		if (TextUtils.isEmpty(value))
+		if (getInstance().getDefaultLanguage() != null && getInstance().getDefaultLanguage().hasValue(key))
 		{
 			value = getInstance().getDefaultLanguage().getValue(key);
 		}
 
-		return value;
+		return value == null ? "" : value;
 	}
 
 	/**
@@ -97,19 +97,6 @@ public abstract class LanguageManager
 		String region = context.getResources().getConfiguration().locale.getISO3Country().toLowerCase();
 		String locale = context.getResources().getConfiguration().locale.getISO3Language().toLowerCase();
 		String languageSuffix = TextUtils.isEmpty(locale) ? "_eng" : "_" + locale.toLowerCase();
-
-		if (languageSuffix.toLowerCase().contains("iw"))
-		{
-			languageSuffix = languageSuffix.replace("iw", "he");
-		}
-		else if (languageSuffix.toLowerCase().contains("in"))
-		{
-			languageSuffix = languageSuffix.replace("in", "id");
-		}
-		else if (languageSuffix.toLowerCase().contains("ji"))
-		{
-			languageSuffix = languageSuffix.replace("ji", "yi");
-		}
 
 		return region + languageSuffix;
 	}

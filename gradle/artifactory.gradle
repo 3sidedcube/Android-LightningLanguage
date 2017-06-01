@@ -92,7 +92,7 @@ afterEvaluate { project ->
 					authentication(userName: ARTIFACTORY_USERNAME, password: ARTIFACTORY_PASSWORD)
 				}
 
-				snapshotRepository(url: 'http://oss.3sidedcube.com:8081/artifactory/snapshot') {
+				snapshotRepository(url: 'http://oss.3sidedcube.com:8081/artifactory/internal') {
 					authentication(userName: ARTIFACTORY_USERNAME, password: ARTIFACTORY_PASSWORD)
 				}
 			}

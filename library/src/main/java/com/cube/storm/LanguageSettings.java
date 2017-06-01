@@ -30,7 +30,7 @@ import lombok.Setter;
  * <pre>
  languageSettings = new LanguageSettings.Builder(this)
 	.registerUriResolver("cache", ContentSettings.getInstance().getUriResolvers().get("cache"))
-	.languageUri(Uri.parse("cache://languages/gbr.json"))
+	.defaultLanguageUri(Uri.parse("cache://languages/gbr.json"))
 	.localeUri(Uri.parse("cache://languages/gbr_fra.json"))
 	.build();
  * </pre>
@@ -186,7 +186,7 @@ public class LanguageSettings
 		/**
 		 * Temporary language Uris. Gets loaded when {@link #build()} is called
 		 */
-		private Uri languageUri, localeUri;
+		private Uri defaultLanguageUri, localeUri;
 
 		/**
 		 * Default constructor
@@ -255,7 +255,7 @@ public class LanguageSettings
 		 */
 		public Builder languageUri(@NonNull Uri languageUri)
 		{
-			this.languageUri = languageUri;
+			this.defaultLanguageUri = languageUri;
 			return this;
 		}
 
@@ -325,11 +325,11 @@ public class LanguageSettings
 		public LanguageSettings build()
 		{
 			LanguageSettings.instance = construct;
-			construct.defaultLanguage = construct.getLanguageManager().loadLanguage(context, languageUri);
+			LanguageSettings.instance.defaultLanguage = construct.getLanguageManager().loadLanguage(context, defaultLanguageUri);
 
 			if (localeUri != null)
 			{
-				construct.localeLanguage = construct.getLanguageManager().loadLanguage(context, localeUri);
+				LanguageSettings.instance.localeLanguage = construct.getLanguageManager().loadLanguage(context, localeUri);
 			}
 
 			return LanguageSettings.instance;

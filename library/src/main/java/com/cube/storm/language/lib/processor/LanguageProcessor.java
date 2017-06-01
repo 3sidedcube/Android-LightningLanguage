@@ -7,6 +7,7 @@ import com.cube.storm.util.lib.processor.GsonProcessor;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
@@ -26,7 +27,7 @@ public class LanguageProcessor extends GsonProcessor<Language>
 	{
 		Language language = new Language();
 
-		if (jsonElement != null && jsonElement.isJsonObject())
+		if (jsonElement != JsonNull.INSTANCE && jsonElement != null && jsonElement.isJsonObject())
 		{
 			Map<String, String> decoded = new Gson().fromJson(jsonElement, new TypeToken<Map<String, String>>(){}.getType());
 			language.setValues(decoded);
