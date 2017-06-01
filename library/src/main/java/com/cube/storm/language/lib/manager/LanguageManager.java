@@ -69,7 +69,7 @@ public abstract class LanguageManager
 			value = getInstance().getLocaleLanguage().getValue(key);
 		}
 
-		if (getInstance().getDefaultLanguage() != null && getInstance().getDefaultLanguage().hasValue(key))
+		if (getInstance().getDefaultLanguage() != null && getInstance().getDefaultLanguage().hasValue(key) && value == null)
 		{
 			value = getInstance().getDefaultLanguage().getValue(key);
 		}
