@@ -16,10 +16,7 @@ android {
 
 dependencies {
 	compile 'com.android.support:support-annotations:25.2.0'
-	compile 'org.projectlombok:lombok:1.16.8'
-	compile 'com.google.code.gson:gson:2.6.2'
-
-	compile 'com.3sidedcube.storm:util:0.4.2'
+	compile 'com.3sidedcube.storm:util:0.4.3'
 }
 
 def srcJava = 'src/main/java'
