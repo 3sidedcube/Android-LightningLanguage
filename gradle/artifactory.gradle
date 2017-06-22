@@ -59,6 +59,15 @@ def setupPomInfo(pom)
 	}
 }
 
+if (JavaVersion.current().isJava8Compatible())
+{
+	allprojects {
+		tasks.withType(Javadoc) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+}
+
 // Extra task definition is needed to work around naming conflict between maven and android plugins
 // http://stackoverflow.com/questions/18559932
 task installArchives(type: Upload) {
@@ -83,7 +92,7 @@ afterEvaluate { project ->
 					authentication(userName: ARTIFACTORY_USERNAME, password: ARTIFACTORY_PASSWORD)
 				}
 
-				snapshotRepository(url: 'http://oss.3sidedcube.com:8081/artifactory/snapshot') {
+				snapshotRepository(url: 'http://oss.3sidedcube.com:8081/artifactory/internal') {
 					authentication(userName: ARTIFACTORY_USERNAME, password: ARTIFACTORY_PASSWORD)
 				}
 			}

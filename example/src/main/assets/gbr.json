@@ -1,0 +1,11 @@
+{
+	"string1" : "String 1",
+	"string2" : "String {VARIABLE}",
+	"string3" : "{VARIABLE.upperCase}",
+	"string4" : "{VARIABLE2}",
+	"_SETTINGS_TEST_CATEGORY": "Test Category",
+	"_SETTINGS_LOCALE_TITLE": "Set language",
+	"_SETTINGS_LOCALE_SUMMARY": "Set the locale to use",
+	"_SETTINGS_GOAT_MODE_ENABLED_TITLE": "Enable Goat Mode",
+	"_SETTINGS_GOAT_MODE_ENABLED_SUMMARY": "Turns on Goat Mode for use with Goat Simulator"
+}

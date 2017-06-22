@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:title="_SETTINGS_TEST_CATEGORY"
+		android:key="test_category"
+	>
+		<Preference
+			android:key="locale"
+			android:title="_SETTINGS_LOCALE_TITLE"
+			android:summary="_SETTINGS_LOCALE_SUMMARY"
+			android:enabled="true"
+		/>
+
+		<CheckBoxPreference
+			android:key="goat_mode_enabled"
+			android:title="_SETTINGS_GOAT_MODE_ENABLED_TITLE"
+			android:defaultValue="true"
+			android:summary="_SETTINGS_GOAT_MODE_ENABLED_SUMMARY"
+		/>
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

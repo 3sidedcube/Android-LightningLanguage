@@ -24,15 +24,29 @@ import java.lang.reflect.Type;
  */
 public abstract class LanguageBuilder
 {
-	private static Gson languageBuilder;
+	private static Gson languageGson;
+	private static GsonBuilder languageBuilder;
 
 	/**
 	 * Required to include view overrides
 	 */
 	public void rebuild()
 	{
-		languageBuilder = null;
+		languageGson = null;
 		getGson();
+	}
+
+	/**
+	 * Creates a gson builder instance with all registered type adapters necessary to build a language object
+	 * @return
+	 */
+	@NonNull
+	public GsonBuilder getGsonBuilder()
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Language.class, new LanguageProcessor());
+
+		return builder;
 	}
 
 	/**
@@ -41,17 +55,15 @@ public abstract class LanguageBuilder
 	 *
 	 * @return The gson object
 	 */
-	private Gson getGson()
+	public Gson getGson()
 	{
-		if (languageBuilder == null)
+		if (languageGson == null)
 		{
-			GsonBuilder builder = new GsonBuilder();
-			builder.registerTypeAdapter(Language.class, new LanguageProcessor());
-
-			languageBuilder = builder.create();
+			GsonBuilder builder = getGsonBuilder();
+			languageGson = builder.create();
 		}
 
-		return languageBuilder;
+		return languageGson;
 	}
 
 	/**
