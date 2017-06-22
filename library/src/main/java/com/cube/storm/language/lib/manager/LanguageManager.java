@@ -3,10 +3,10 @@ package com.cube.storm.language.lib.manager;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.cube.storm.LanguageSettings;
 import com.cube.storm.language.data.Language;
+import com.cube.storm.language.lib.helper.LanguageHelper;
 
 import java.util.Locale;
 
@@ -69,7 +69,7 @@ public abstract class LanguageManager
 			value = getInstance().getLocaleLanguage().getValue(key);
 		}
 
-		if (getInstance().getDefaultLanguage() != null && getInstance().getDefaultLanguage().hasValue(key))
+		if (getInstance().getDefaultLanguage() != null && getInstance().getDefaultLanguage().hasValue(key) && value == null)
 		{
 			value = getInstance().getDefaultLanguage().getValue(key);
 		}
@@ -94,11 +94,7 @@ public abstract class LanguageManager
 	@NonNull
 	public String getLocale(@NonNull Context context)
 	{
-		String region = context.getResources().getConfiguration().locale.getISO3Country().toLowerCase();
-		String locale = context.getResources().getConfiguration().locale.getISO3Language().toLowerCase();
-		String languageSuffix = TextUtils.isEmpty(locale) ? "_eng" : "_" + locale.toLowerCase();
-
-		return region + languageSuffix;
+		return LanguageHelper.getLocale(context);
 	}
 
 	/**
@@ -120,24 +116,7 @@ public abstract class LanguageManager
 	@NonNull @Deprecated
 	public String getOldLocale(@NonNull Context context)
 	{
-		String region = context.getResources().getConfiguration().locale.getISO3Country().toLowerCase();
-		String locale = context.getResources().getConfiguration().locale.getLanguage().toLowerCase();
-		String languageSuffix = TextUtils.isEmpty(locale) ? "_en" : "_" + locale.toLowerCase();
-
-		if (languageSuffix.toLowerCase().contains("iw"))
-		{
-			languageSuffix = languageSuffix.replace("iw", "he");
-		}
-		else if (languageSuffix.toLowerCase().contains("in"))
-		{
-			languageSuffix = languageSuffix.replace("in", "id");
-		}
-		else if (languageSuffix.toLowerCase().contains("ji"))
-		{
-			languageSuffix = languageSuffix.replace("ji", "yi");
-		}
-
-		return region + languageSuffix;
+		return LanguageHelper.getOldLocale(context);
 	}
 
 	/**
