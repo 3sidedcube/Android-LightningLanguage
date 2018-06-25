@@ -12,6 +12,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -30,6 +31,17 @@ public class LanguageProcessor extends GsonProcessor<Language>
 		if (jsonElement != JsonNull.INSTANCE && jsonElement != null && jsonElement.isJsonObject())
 		{
 			Map<String, String> decoded = new Gson().fromJson(jsonElement, new TypeToken<Map<String, String>>(){}.getType());
+
+			//Remove double backslashes e.g., \\n to make display a new line
+			Iterator it = decoded.entrySet().iterator();
+			while (it.hasNext())
+			{
+				Map.Entry<String, String> pair = (Map.Entry<String,String>)it.next();
+				String temp = pair.getValue();
+				if(temp.contains("\\n")){
+					pair.setValue(temp.replace("\\n","\n"));
+				}
+			}
 			language.setValues(decoded);
 
 			return language;
