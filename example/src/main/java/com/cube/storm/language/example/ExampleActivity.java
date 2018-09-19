@@ -34,7 +34,7 @@ public class ExampleActivity extends Activity
 
 		// Standard localisation
 		String value1 = LocalisationHelper.localise("string1");
-		Assert.assertEquals("String 1 (in british)", value1);
+		Assert.assertEquals("String 1 (in \"british\") \n new line", value1);
 
 		// View localisation with variable
 		TextView text = new TextView(this);
