@@ -104,56 +104,6 @@ afterEvaluate { project ->
 		sign configurations.archives
 	}
 
-	task androidMavenJavadocs(type: Javadoc) {
-		description "Generates Maven-friendly Javadocs for publishing."
-
-		def matchingVariant = android.libraryVariants.find({ it.name.equals('release') })
-		def androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-
-		// Use delomboked source instead of the raw source if applicable.
-		def delombok = { tasks.findByPath('delombok') }
-		source { delombok() ? delombok().outputs : matchingVariant.javaCompile.source }
-		source "${buildDir}/generated/source/buildConfig/release/"
-		source "${buildDir}/generated/source/r/release/"
-
-		classpath = files(androidJar) + files(matchingVariant.javaCompile.classpath.files)
-
-		options {
-			charSet = 'UTF-8'
-			use = true
-			splitIndex = true
-		}
-
-		options.links("http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/", "com.google.gson")
-		options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
-		options.links("http://docs.oracle.com/javase/7/docs/api/");
-
-		// exclude generated files
-		exclude '**/BuildConfig.java'
-		exclude '**/R.java'
-
-		// exclude any internal packages
-		exclude '**/com/acme/sdk/api/**'
-	}
-
-	androidMavenJavadocs.dependsOn {
-		// Use the delomboked source instead of the raw source if applicable.
-		if (tasks.findByPath('delombok'))
-		{
-			tasks.delombok
-		}
-		else
-		{
-			[tasks.processReleaseResources, tasks.generateReleaseBuildConfig]
-		}
-	}
-
-	task androidJavadocsJar(type: Jar, dependsOn: androidMavenJavadocs) {
-		classifier = 'javadoc'
-		baseName = POM_ARTIFACT_ID
-		from androidMavenJavadocs.destinationDir
-	}
-
 	task androidSourcesJar(type: Jar) {
 		classifier = 'sources'
 		baseName = POM_ARTIFACT_ID
@@ -162,6 +112,5 @@ afterEvaluate { project ->
 
 	artifacts {
 		archives androidSourcesJar
-		archives androidJavadocsJar
 	}
 }

@@ -4,21 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.cube.storm.language.data.Language;
 import com.cube.storm.language.lib.factory.FileFactory;
 import com.cube.storm.language.lib.manager.LanguageManager;
-import com.cube.storm.language.lib.processor.MethodProcessor;
 import com.cube.storm.language.lib.parser.LanguageBuilder;
+import com.cube.storm.language.lib.processor.MethodProcessor;
 import com.cube.storm.util.lib.resolver.AssetsResolver;
 import com.cube.storm.util.lib.resolver.FileResolver;
 import com.cube.storm.util.lib.resolver.Resolver;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * This is the entry point class of the library. To enable the use of the library, you must instantiate
@@ -75,11 +73,6 @@ public class LanguageSettings
 
 		return instance;
 	}
-
-	/**
-	 * Default private constructor
-	 */
-	private LanguageSettings(){}
 
 	/**
 	 * Reloads the default and fallback languages if they have been previously set using the same Uri as defined in
