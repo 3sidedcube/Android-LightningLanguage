@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 25
-	buildToolsVersion "25.0.2"
+	compileSdkVersion rootProject.ext.compileSdkVersion
 
 	defaultConfig {
 		applicationId "com.cube.storm.language.example"
-		minSdkVersion 16
-		targetSdkVersion 25
+		minSdkVersion rootProject.ext.minSdkVersion
+		targetSdkVersion rootProject.ext.targetSdkVersion
 		versionCode 1
 		versionName "1.0"
 	}
@@ -34,7 +33,8 @@ android {
 }
 
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-	compile 'com.android.support:appcompat-v7:25.2.0'
-	compile project(':library')
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation project(':library')
+
+	implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
 }
