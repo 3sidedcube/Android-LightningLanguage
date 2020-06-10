@@ -36,5 +36,8 @@ dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 	implementation project(':library')
 
-	implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+	implementation 'androidx.appcompat:appcompat:1.1.0'
+	implementation "androidx.preference:preference:1.1.1"
+
+	implementation 'junit:junit:4.12'
 }

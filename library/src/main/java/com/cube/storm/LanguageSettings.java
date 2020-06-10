@@ -2,8 +2,8 @@ package com.cube.storm;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.cube.storm.language.data.Language;
 import com.cube.storm.language.lib.factory.FileFactory;
 import com.cube.storm.language.lib.manager.LanguageManager;

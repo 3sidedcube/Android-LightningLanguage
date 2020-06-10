@@ -1,10 +1,6 @@
 package com.cube.storm.language.lib.helper;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.preference.Preference;
-import android.preference.PreferenceGroup;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
@@ -12,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceGroup;
 import com.cube.storm.LanguageSettings;
 import com.cube.storm.language.lib.annotation.Localise;
 import com.cube.storm.language.lib.processor.Mapping;

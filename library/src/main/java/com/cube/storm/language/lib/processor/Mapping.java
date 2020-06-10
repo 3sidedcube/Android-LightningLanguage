@@ -1,6 +1,6 @@
 package com.cube.storm.language.lib.processor;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.cube.storm.language.lib.annotation.Localise;
 

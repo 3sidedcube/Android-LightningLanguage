@@ -1,6 +1,6 @@
 package com.cube.storm.language.lib.processor;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.cube.storm.LanguageSettings;
 import com.cube.storm.util.lib.processor.Processor;
