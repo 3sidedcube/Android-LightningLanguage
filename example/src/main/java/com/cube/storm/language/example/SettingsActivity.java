@@ -1,40 +1,41 @@
 package com.cube.storm.language.example;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
-import android.preference.PreferenceScreen;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
+import androidx.preference.PreferenceScreen;
 import com.cube.storm.language.lib.helper.LocalisationHelper;
-
 import junit.framework.Assert;
 
 /**
  * @author Jamie Cruwys
  * @project LightningUtil
  */
-public class SettingsActivity extends Activity
+public class SettingsActivity extends AppCompatActivity
 {
 	@Override protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_settings);
 
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.add(R.id.container, new SettingsActivity.SettingsFragment());
 		transaction.commit();
 	}
 
-	public static class SettingsFragment extends PreferenceFragment
+	public static class SettingsFragment extends PreferenceFragmentCompat
 	{
-		@Override public void onCreate(Bundle savedInstanceState)
+		@Override
+		public void onCreatePreferences(
+			Bundle savedInstanceState,
+			String rootKey
+		)
 		{
-			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences);
 
 			PreferenceScreen preferenceScreen = getPreferenceScreen();

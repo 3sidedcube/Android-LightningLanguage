@@ -1,7 +1,7 @@
 package com.cube.storm.language.lib.processor;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
