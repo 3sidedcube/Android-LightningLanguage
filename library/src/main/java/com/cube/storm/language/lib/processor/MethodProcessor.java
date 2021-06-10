@@ -46,8 +46,8 @@ public class MethodProcessor
 			}
 		}
 
-		string = string.replaceAll("\\{" + originalString + "(\\.[0-9a-zA-Z]+)\\}", mappedVariable);
-		string = string.replaceAll("\\{" + originalString + "\\}", originalString);
+		string = string.replaceAll("\\{" + Pattern.quote(originalString) + "(\\.[0-9a-zA-Z]+)\\}", mappedVariable);
+		string = string.replaceAll("\\{" + Pattern.quote(originalString) + "\\}", originalString);
 
 		return string;
 	}
