@@ -1,25 +1,23 @@
 package com.cube.storm.language.example;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
+import androidx.appcompat.app.AppCompatActivity;
 import com.cube.storm.LanguageSettings;
 import com.cube.storm.language.lib.annotation.Localise;
 import com.cube.storm.language.lib.helper.LocalisationHelper;
 import com.cube.storm.language.lib.processor.Mapping;
-
 import junit.framework.Assert;
 
 /**
  * @author Callum Taylor
  * @project LightningUtil
  */
-public class ExampleActivity extends Activity
+public class ExampleActivity extends AppCompatActivity
 {
 	@Localise("VARIABLE") private String count = "two";
 
