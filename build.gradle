@@ -2,7 +2,7 @@
 
 buildscript {
 	repositories {
-		jcenter()
+		mavenCentral()
 		google()
 	}
 	dependencies {
@@ -21,11 +21,14 @@ ext {
 
 allprojects {
 	repositories {
-		jcenter()
+		mavenCentral()
 		google()
+
+		maven { url "https://maven.google.com" }
 
 		maven {
 			url 'http://oss.3sidedcube.com:8081/artifactory/internal'
+			allowInsecureProtocol = true
 		}
 
 		maven {
@@ -34,6 +37,7 @@ allprojects {
 				password "$ARTIFACTORY_PASSWORD"
 			}
 			url 'http://oss.3sidedcube.com:8081/artifactory/private'
+			allowInsecureProtocol = true
 		}
 	}
 }
