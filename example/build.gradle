@@ -12,23 +12,23 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_1_8
-		targetCompatibility JavaVersion.VERSION_1_8
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
 	}
 
-	android {
-		lintOptions {
-			abortOnError false
-		}
+	lintOptions {
+		abortOnError false
 	}
+
+	namespace 'com.cube.storm.language.example'
 }
 
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 	implementation project(':library')
 
-	implementation 'androidx.appcompat:appcompat:1.1.0'
-	implementation "androidx.preference:preference:1.2.0"
+	implementation 'androidx.appcompat:appcompat:1.7.1'
+	implementation "androidx.preference:preference:1.2.1"
 
 	implementation 'junit:junit:4.13.2'
 }
